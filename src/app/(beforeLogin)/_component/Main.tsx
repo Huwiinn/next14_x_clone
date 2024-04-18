@@ -20,7 +20,6 @@ const Main = () => {
         <Link href="/login" className={styles.login}>
           로그인
         </Link>
-        <a className={styles.just_a_tag}>이것은 a 태그입니다.</a>
       </div>
     </>
   );

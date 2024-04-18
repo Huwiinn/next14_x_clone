@@ -12,11 +12,11 @@
 }
 
 /* 다크모드에서 .modalBackground의 배경 색상을 설정하는데 사용되는 코드임 */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .modalBackground {
     background-color: rgba(91, 112, 131, 0.4);
   }
-}
+} */
 
 .modal {
   background-color: rgb(var(--background-end-rgb));
@@ -131,11 +131,11 @@
   background-color: rgba(15, 20, 25, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   .closeButton {
     background-color: black;
   }
   .closeButton svg {
     fill: white;
   }
-}
+} */

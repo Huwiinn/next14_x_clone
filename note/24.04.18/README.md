@@ -1,6 +1,7 @@
 <Next.js 14>
 
 [layout.tsx와 template.tsx의 차이]
+
 리렌더링이 안되게 하고 싶으면 layout.tsx
 
 렌더링이 되어야 한다면 template.tsx
