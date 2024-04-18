@@ -1,7 +1,8 @@
-import React, { JSXElementConstructor } from "react";
+import React from "react";
+import styles from "@/app/(afterLogin)/layout.module.css";
 
 const HomeLayout = ({ children }: any) => {
-  return <div>홈 레이아웃 {children}</div>;
+  return <div>{children}</div>;
 };
 
 export default HomeLayout;

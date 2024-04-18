@@ -1,7 +1,8 @@
-import React from "react";
+import React, { ReactNode } from "react";
+import styles from "@/app/(afterLogin)/layout.module.css";
 
-const AfterLoginLayout = ({ children }: any) => {
-  return <div>{children} - afterLogin 로그인 이후 레이아웃</div>;
+const AfterLoginLayout = ({ children }: { children: ReactNode }) => {
+  return <div>{children}</div>;
 };
 
 export default AfterLoginLayout;
