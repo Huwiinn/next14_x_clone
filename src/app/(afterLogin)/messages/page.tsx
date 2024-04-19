@@ -1,7 +1,7 @@
 import React from "react";
 
 const Page = () => {
-  return <div>프로필 페이지</div>;
+  return <main>쪽지페이지</main>;
 };
 
 export default Page;
