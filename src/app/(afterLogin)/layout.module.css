@@ -81,7 +81,7 @@
 .main {
   width: 600px;
   height: 120dvh;
-  background-color: red;
+  /* background-color: red; */
 }
 
 .rightSection {
