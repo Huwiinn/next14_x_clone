@@ -44,8 +44,8 @@
 
 .postShade {
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  width: inherit;
+  height: inherit;
   border-radius: 20px;
   position: absolute;
   top: 0;
@@ -189,3 +189,13 @@
 .heartButton:hover .count {
   color: rgb(228, 34, 126);
 }
+
+/* .bgColor {
+  background-color: blue;
+  color: #fff;
+}
+
+.bgColor2 {
+  background-color: red;
+  color: #fff;
+} */
