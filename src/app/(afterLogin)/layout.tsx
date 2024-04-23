@@ -41,6 +41,7 @@ const AfterLoginLayout = ({ children, modal }: Props) => {
       </header>
       <div className={styles.rightSectionWrapper}>
         <div className={styles.rightSectionInner}>
+          {/* main 태그에 들어가는 자식은 현재 폴더 경로애 위치한 page.tsx 파일이다. */}
           <main className={styles.main}>{children}</main>
           <section className={styles.rightSection}>
             <SearchBar />

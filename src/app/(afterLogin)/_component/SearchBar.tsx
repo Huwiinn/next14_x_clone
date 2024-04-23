@@ -11,7 +11,7 @@ const SearchBar = () => {
   const onChangeAll = () => {};
   const onChangeFollow = () => {
     radioRef.current?.click();
-    console.log("radioRef.current?.click() : ", radioRef.current?.click());
+    // console.log("radioRef.current?.click() : ", radioRef.current?.click());
   };
 
   if (pathname === "/explore") {

@@ -15,7 +15,7 @@ const Tab = () => {
     setTab("fol");
   };
 
-  console.log(11111, tab);
+  // console.log(11111, tab);
 
   // useRef를 활용하여 input을 숨기고 이미지 업로드창을 띄우는 방법 연습
   // const imageRef = useRef<HTMLInputElement>(null);

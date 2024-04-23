@@ -55,6 +55,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .radio > div {
@@ -63,4 +64,17 @@
 
 .radio label {
   font-weight: 500;
+}
+
+.radio input[type="radio"] {
+  appearance: none;
+  border: 1px solid coral;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+}
+
+.radio input[type="radio"]:checked {
+  outline: 4px solid coral;
+  outline-offset: -8px;
 }

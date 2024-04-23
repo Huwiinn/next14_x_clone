@@ -71,7 +71,22 @@
   text-decoration: underline;
 }
 
-.postImageSection {
+.repostButton.white svg,
+.repostButton.white .count {
+  fill: white;
+  color: white;
+}
+
+.heartButton.white svg,
+.heartButton.white .count {
+  fill: white;
+  color: white;
+}
+
+.commentButton.white svg,
+.commentButton.white .count {
+  fill: white;
+  color: white;
 }
 
 .postBody {

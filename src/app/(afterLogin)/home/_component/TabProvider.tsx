@@ -12,7 +12,7 @@ export const TabContext = createContext({
 const TabProvider = ({ children }: Props) => {
   const [tab, setTab] = useState("rec");
 
-  console.log("TabProvider tab : ", tab);
+  // console.log("TabProvider tab : ", tab);
 
   return (
     <TabContext.Provider value={{ tab, setTab }}>

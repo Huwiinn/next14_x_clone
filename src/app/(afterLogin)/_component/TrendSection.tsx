@@ -6,7 +6,7 @@ import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 
 export default function TrendSection() {
   const pathname = usePathname();
-  console.log("pathname : ", pathname);
+  // console.log("pathname : ", pathname);
 
   if (pathname === "/explore") {
     return null;
