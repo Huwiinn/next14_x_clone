@@ -7,6 +7,7 @@ import ActionButtons from "./ActionButtons";
 import PostArticle from "./PostArticle";
 // {faker} 이런 방식을 '네임드 임포트' 라고 한다.
 import { faker } from "@faker-js/faker";
+import PostImages from "./PostImages";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
@@ -27,7 +28,12 @@ export default function Post({ noImage }: Props) {
 
   // 확률 반반일 때,
   if (Math.random() > 0.5 && !noImage) {
-    target.Images.push({ imageId: 1, link: faker.image.urlLoremFlickr() });
+    target.Images.push(
+      { imageId: 1, link: faker.image.urlLoremFlickr() },
+      { imageId: 2, link: faker.image.urlLoremFlickr() },
+      { imageId: 3, link: faker.image.urlLoremFlickr() },
+      { imageId: 4, link: faker.image.urlLoremFlickr() }
+    );
   }
 
   return (
@@ -53,13 +59,7 @@ export default function Post({ noImage }: Props) {
           </div>
           <div>{target.content}</div>
           <div className={style.postImageSection}>
-            {target.Images && target.Images.length > 0 && (
-              <Link
-                href={`/${target.User.id}/status/${target.postId}/photo/${target.Images[0].imageId}`}
-                className={style.postImageSection}>
-                <img src={target.Images[0]?.link} alt="이미지 사진"></img>
-              </Link>
-            )}
+            <PostImages post={target} />
           </div>
           <ActionButtons white />
         </div>

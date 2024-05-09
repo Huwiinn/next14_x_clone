@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import styled from "styled-components";
+import useCounter from "./hooks/useCounter";
 
 function page() {
   const fruits = [
@@ -9,12 +10,25 @@ function page() {
     { text: "사과", value: 2 },
   ];
   const [selectedFruit, setSelectedFruit] = useState(null);
-  const onChangeRadio = (e) => {
-    setSelectedFruit(Number(e.target.value));
+  const onChangeRadio = (e: any) => {
+    setSelectedFruit(Number(e.target?.value));
   };
+
+  const count = useCounter();
 
   return (
     <>
+      <div>
+        <button name="increase" id="increase" onClick={count.increase}>
+          증가 버튼
+        </button>
+      </div>
+      <div>
+        <button name="decrease" id="decrease" onClick={count.decrease}>
+          감소 버튼
+        </button>
+      </div>
+      현재 카운트 : {count.count}
       <RadioWrap>
         {fruits.map((fruit, idx) => (
           <label key={idx}>
@@ -39,7 +53,6 @@ function page() {
           </label>
         ))}
       </RadioWrap>
-
       <TestRadioCustomWrap>
         <div className="wrap">
           <label htmlFor="email_radio">이메일</label>

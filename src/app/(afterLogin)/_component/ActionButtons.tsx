@@ -31,8 +31,8 @@ export default function ActionButtons({ white }: Props) {
       <div
         className={cx(
           style.commentButton,
-          { [style.commented]: commented },
-          white && style.white
+          { [style.commented]: commented }
+          // white && style.white
         )}>
         <button title="댓글 아이콘 버튼" onClick={onClickComment}>
           <svg width={24} viewBox="0 0 24 24" aria-hidden="true">
@@ -46,8 +46,8 @@ export default function ActionButtons({ white }: Props) {
       <div
         className={cx(
           style.repostButton,
-          reposted && style.reposted,
-          white && style.white
+          reposted && style.reposted
+          // white && style.white
         )}>
         <button title="리트윗 아이콘 버튼" onClick={onClickRepost}>
           <svg width={24} viewBox="0 0 24 24" aria-hidden="true">
@@ -60,8 +60,8 @@ export default function ActionButtons({ white }: Props) {
       </div>
       <div
         className={cx(
-          [style.heartButton, liked && style.liked],
-          white && style.white
+          [style.heartButton, liked && style.liked]
+          // white && style.white
         )}>
         <button title="좋아요 아이콘 버튼" onClick={onClickHeart}>
           <svg width={24} viewBox="0 0 24 24" aria-hidden="true">
