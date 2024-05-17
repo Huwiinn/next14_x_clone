@@ -12,6 +12,16 @@ export const {
     signIn: "i/flow/login",
     newUser: "i/flow/signup",
   },
+
+  // callbacks: {
+  //   async authorized({ request, auth }) {
+  //     if (!auth) {
+  //       return Response.redirect("http://localhost:3000");
+  //     }
+  //     return true;
+  //   },
+  // },
+
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
@@ -36,8 +46,9 @@ export const {
         const user = await authResponse.json();
         console.log("user : ", user);
 
+        // 세션 토큰 데이터
         return {
-          id: user.id,
+          email: user.id,
           name: user.nickname,
           image: user.image,
           ...user,

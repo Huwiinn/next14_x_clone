@@ -14,9 +14,17 @@
 
 import { useRouter } from "next/navigation";
 import Main from "../_component/Main";
+import { useSession } from "next-auth/react";
 
 const Login = () => {
   const router = useRouter();
+  const { data: session } = useSession();
+  if (session?.user) {
+    // 아래 router부분 에러 원인 뜯어보기
+    router.replace("/home");
+    return null;
+  }
+
   router.replace("/i/flow/login");
   return <Main />;
 };
