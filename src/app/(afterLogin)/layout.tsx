@@ -9,6 +9,7 @@ import TrendSection from "./_component/TrendSection";
 import FollowRecommend from "./_component/FollowRecommend";
 import SearchBar from "./_component/SearchBar";
 import { auth } from "@/auth";
+import RQProvider from "./_component/RQProvider";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -57,23 +58,25 @@ const AfterLoginLayout = async ({ children, modal }: Props) => {
           </div>
         </section>
       </header>
-      <div className={styles.rightSectionWrapper}>
-        <div className={styles.rightSectionInner}>
-          {/* main 태그에 들어가는 자식은 현재 폴더 경로애 위치한 page.tsx 파일이다. */}
-          <main className={styles.main}>{children}</main>
-          <section className={styles.rightSection}>
-            <SearchBar />
-            <TrendSection />
-            <div className={styles.followRecommend}>
-              <h3>팔로우 추천</h3>
-              <FollowRecommend />
-              <FollowRecommend />
-              <FollowRecommend />
-            </div>
-          </section>
+      <RQProvider>
+        <div className={styles.rightSectionWrapper}>
+          <div className={styles.rightSectionInner}>
+            {/* main 태그에 들어가는 자식은 현재 폴더 경로애 위치한 page.tsx 파일이다. */}
+            <main className={styles.main}>{children}</main>
+            <section className={styles.rightSection}>
+              <SearchBar />
+              <TrendSection />
+              <div className={styles.followRecommend}>
+                <h3>팔로우 추천</h3>
+                <FollowRecommend />
+                <FollowRecommend />
+                <FollowRecommend />
+              </div>
+            </section>
+          </div>
         </div>
-      </div>
-      {modal}
+        {modal}
+      </RQProvider>
     </div>
   );
 };
