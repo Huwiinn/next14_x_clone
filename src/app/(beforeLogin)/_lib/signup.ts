@@ -23,6 +23,7 @@ const onSubmit = async (prevState: any, formData: FormData) => {
   }
 
   let shouldRedirect = false;
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
@@ -48,7 +49,7 @@ const onSubmit = async (prevState: any, formData: FormData) => {
       redirect: false,
     });
   } catch (err) {
-    return console.log(err);
+    return console.log("회원가입 에러 : ", err);
   }
 
   if (shouldRedirect) {
