@@ -2,8 +2,9 @@ import { auth } from "./auth";
 
 export async function middleware() {
   const session = await auth();
+
   if (!session) {
-    return Response.redirect("http://localhost:3000/i/flow/login");
+    return Response.redirect("http://localhost:3000");
   }
 }
 
