@@ -1,13 +1,18 @@
 import Link from "next/link";
 import React from "react";
 import styles from "./trend.module.css";
+import { HashTag } from "../../../model/HashTag";
 
-const Trend = () => {
+type Props = {
+  trend: HashTag;
+};
+
+const Trend = ({ trend }: Props) => {
   return (
-    <Link href={`./search?q=트렌드`} className={styles.container}>
+    <Link href={`./search?q=${trend.title}`} className={styles.container}>
       <div className={styles.title}>실시간 트렌드</div>
-      <div className={styles.title}>이해주, 텐퍼센트의 황제</div>
-      <div className={styles.count}>9,999 posts</div>
+      <div className={styles.title}>{trend.title}</div>
+      <div className={styles.count}>{trend.count.toLocaleString()} posts</div>
     </Link>
   );
 };

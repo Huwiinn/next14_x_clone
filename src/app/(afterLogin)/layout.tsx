@@ -10,6 +10,10 @@ import FollowRecommend from "./_component/FollowRecommend";
 import SearchBar from "./_component/SearchBar";
 import { auth } from "@/auth";
 import RQProvider from "./_component/RQProvider";
+import { useQuery } from "@tanstack/react-query";
+import { User } from "../../model/User";
+import getFollowRecommends from "./_lib/getFollowRecommends";
+import FollowRecommendsSec from "./_component/FollowRecommendsSec";
 
 type Props = { children: ReactNode; modal: ReactNode };
 
@@ -67,10 +71,10 @@ const AfterLoginLayout = async ({ children, modal }: Props) => {
               <SearchBar />
               <TrendSection />
               <div className={styles.followRecommend}>
-                <h3>팔로우 추천</h3>
-                <FollowRecommend />
-                <FollowRecommend />
-                <FollowRecommend />
+                <>
+                  <h3>팔로우 추천</h3>
+                  <FollowRecommendsSec />
+                </>
               </div>
             </section>
           </div>
