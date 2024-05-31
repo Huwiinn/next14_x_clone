@@ -8,27 +8,21 @@ import PostArticle from "./PostArticle";
 // {faker} 이런 방식을 '네임드 임포트' 라고 한다.
 import { faker } from "@faker-js/faker";
 import PostImages from "./PostImages";
+import { Post } from "@/model/Post";
 
 dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
-type Props = { noImage?: boolean };
-export default function Post({ noImage }: Props) {
-  const target = {
-    postId: 1,
-    User: {
-      id: "elonmusk",
-      nickname: "Elon Musk",
-      image: "/yRsRRjGO.jpg",
-    },
-    content: "1년 반만 딱 대라..",
-    createdAt: new Date(),
-    Images: [] as any[],
-  };
+type Props = { noImage?: boolean; post: Post };
+
+export default function Post({ noImage, post }: Props) {
+  const target = post;
+
+  console.log("target : ", target);
 
   // 확률 반반일 때,
   if (Math.random() > 0.5 && !noImage) {
-    target.Images.push(
+    target.images.push(
       { imageId: 1, link: faker.image.urlLoremFlickr() },
       { imageId: 2, link: faker.image.urlLoremFlickr() },
       { imageId: 3, link: faker.image.urlLoremFlickr() },
@@ -40,17 +34,17 @@ export default function Post({ noImage }: Props) {
     <PostArticle post={target}>
       <div className={style.postWrapper}>
         <div className={style.postUserSection}>
-          <Link href={`/${target.User.id}`} className={style.postUserImage}>
-            <img src={target.User.image} alt={target.User.nickname} />
+          <Link href={`/${target.user.id}`} className={style.postUserImage}>
+            <img src={target.user.image} alt={target.user.nickname} />
             <div className={style.postShade} />
           </Link>
         </div>
         <div className={style.postBody}>
           <div className={style.postMeta}>
-            <Link href={`/${target.User.id}`}>
-              <span className={style.postUserName}>{target.User.nickname}</span>
+            <Link href={`/${target.user.id}`}>
+              <span className={style.postUserName}>{target.user.nickname}</span>
               &nbsp;
-              <span className={style.postUserId}>@{target.User.id}</span>
+              <span className={style.postUserId}>@{target.user.id}</span>
               &nbsp; · &nbsp;
             </Link>
             <span className={style.postDate}>

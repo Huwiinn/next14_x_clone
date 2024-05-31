@@ -1,4 +1,18 @@
 import { http, HttpResponse } from "msw";
+import { faker } from "@faker-js/faker";
+
+const generateDate = () => {
+  const lastWeek = new Date(Date.now());
+  lastWeek.setDate(lastWeek.getDate() - 7);
+
+  return faker.date.between({ from: lastWeek, to: Date.now() });
+};
+
+const User = [
+  { id: "elonmusk", nickname: "Elon Musk", image: faker.image.avatar() },
+  { id: "휘인", nickname: "Hwuiinn", image: faker.image.avatar() },
+  { id: "철수", nickname: "CukSu", image: faker.image.avatar() },
+];
 
 export const handlers = [
   http.post("/api/login", () => {
@@ -19,6 +33,7 @@ export const handlers = [
   }),
   http.post("/api/logout", () => {
     console.log("로그아웃");
+    // 보낼 데이터가 없을 때, 보통 new HttpResponse를 많이 사용함.
     return new HttpResponse(null, {
       headers: {
         "set-cookie": "connect.sid=;HttpOnly;Path=/;Max-Age=0",
@@ -39,5 +54,59 @@ export const handlers = [
         "set-cookie": "connect.sid=msw-cookie;HttpOnly;Path=/;Max-Age=0",
       },
     });
+  }),
+
+  http.get("/api/postRecommends", ({ request }) => {
+    const url = new URL(request.url);
+    const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
+    return HttpResponse.json([
+      {
+        postId: cursor + 1,
+        user: User[0],
+        content: `${cursor + 1} Z.com is so marvelous. I'm gonna buy that.`,
+        images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 2,
+        user: User[0],
+        content: `${cursor + 2} Z.com is so marvelous. I'm gonna buy that.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 3,
+        user: User[1],
+        content: `${cursor + 3} Z.com is so marvelous. I'm gonna buy that.`,
+        images: [],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 4,
+        user: User[0],
+        content: `${cursor + 4} Z.com is so marvelous. I'm gonna buy that.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+          { imageId: 4, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 5,
+        user: User[2],
+        content: `${cursor + 5} Z.com is so marvelous. I'm gonna buy that.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+    ]);
   }),
 ];

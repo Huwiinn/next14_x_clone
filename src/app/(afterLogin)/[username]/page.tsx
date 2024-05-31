@@ -40,12 +40,12 @@ export default function Profile() {
         </button>
       </div>
       <div>
+        {/* <Post />
         <Post />
         <Post />
         <Post />
         <Post />
-        <Post />
-        <Post />
+        <Post /> */}
       </div>
     </main>
   );

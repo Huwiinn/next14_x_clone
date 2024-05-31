@@ -9,13 +9,13 @@ type Props = {
   post: {
     postId: number;
     content: string;
-    User: {
+    user: {
       id: string;
       nickname: string;
       image: string;
     };
     createdAt: Date;
-    Images: any[];
+    images: any[];
   };
 };
 
@@ -24,7 +24,7 @@ export const a = 1;
 export default function PostArticle({ children, post }: Props) {
   const router = useRouter();
   const onClick = () => {
-    router.push(`/${post.User.id}/status/${post.postId}`);
+    router.push(`/${post.user.id}/status/${post.postId}`);
   };
 
   return (
