@@ -9,7 +9,7 @@ import {
   HydrationBoundary,
 } from "@tanstack/react-query";
 import { getPostRecommend } from "../_lib/getPostRecommends";
-import PostRecommends from "./_component/PostRecommends";
+import TabDecider from "./_component/TabDecider";
 
 const Home = async () => {
   const queryClient = new QueryClient();
@@ -32,7 +32,7 @@ const Home = async () => {
         <TabProvider>
           <Tab />
           <PostForm />
-          <PostRecommends />
+          <TabDecider />
         </TabProvider>
       </HydrationBoundary>
     </main>

@@ -18,8 +18,6 @@ type Props = { noImage?: boolean; post: Post };
 export default function Post({ noImage, post }: Props) {
   const target = post;
 
-  console.log("target : ", target);
-
   // 확률 반반일 때,
   if (Math.random() > 0.5 && !noImage) {
     target.images.push(

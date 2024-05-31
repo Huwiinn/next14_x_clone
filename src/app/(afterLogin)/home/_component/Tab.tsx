@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useContext } from "react";
+import { TabContext } from "./TabProvider";
 import styles from "./tab.module.css";
 
-type HomeIndicator = "rec" | "fol";
-
 const Tab = () => {
-  const [tab, setTab] = useState<HomeIndicator>("rec");
+  const { tab, setTab } = useContext(TabContext);
 
   const onClickRec = () => {
     setTab("rec");
@@ -15,15 +14,8 @@ const Tab = () => {
     setTab("fol");
   };
 
-  // console.log(11111, tab);
-
   // useRef를 활용하여 input을 숨기고 이미지 업로드창을 띄우는 방법 연습
   // const imageRef = useRef<HTMLInputElement>(null);
-
-  // const onClickImage = () => {
-  //   imageRef.current?.click();
-  //   alert("클릭!");
-  // };
 
   return (
     <div className={styles.homeFixed}>

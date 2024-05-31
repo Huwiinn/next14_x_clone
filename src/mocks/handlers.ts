@@ -109,4 +109,111 @@ export const handlers = [
       },
     ]);
   }),
+  http.get("/api/search/:tag", ({ request, params }) => {
+    const { tag } = params;
+    const url = new URL(request.url);
+    const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
+    return HttpResponse.json([
+      {
+        postId: cursor + 1,
+        user: User[0],
+        content: `${cursor + 1} 검색결과 ${tag}.`,
+        images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 2,
+        user: User[0],
+        content: `${cursor + 2} 검색결과 ${tag}.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 3,
+        user: User[1],
+        content: `${cursor + 3} 검색결과 ${tag}.`,
+        images: [],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 4,
+        user: User[0],
+        content: `${cursor + 4} 검색결과 ${tag}.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+          { imageId: 4, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 5,
+        user: User[2],
+        content: `${cursor + 5} 검색결과 ${tag}.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+    ]);
+  }),
+  http.get("/api/followingPosts", ({ request }) => {
+    const url = new URL(request.url);
+    const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
+    return HttpResponse.json([
+      {
+        postId: cursor + 1,
+        user: User[0],
+        content: `${cursor + 1} 운동 갈 것.`,
+        images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 2,
+        user: User[0],
+        content: `${cursor + 2} 끝나고 도서관으로 갈 것`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 3,
+        user: User[1],
+        content: `${cursor + 3} 오늘 약속 잡지 말 것.`,
+        images: [],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 4,
+        user: User[0],
+        content: `${cursor + 4} 내일 출근이니까 8시에 일어날 것.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+          { imageId: 4, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 5,
+        user: User[2],
+        content: `${cursor + 5} 사전 인터뷰 내용 작성할 것.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+    ]);
+  }),
 ];

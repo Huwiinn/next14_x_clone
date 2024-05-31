@@ -1,14 +1,14 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getPostRecommend } from "../../_lib/getPostRecommends";
+import { getFollowingPosts } from "../../_lib/getFollowingPosts";
 import Post from "@/app/(afterLogin)/_component/Post";
 import { Post as IPost } from "@/model/Post";
 
-export default function PostRecommends() {
+export default function FollowingPosts() {
   const { data } = useQuery<IPost[]>({
-    queryKey: ["posts", "recommends"],
-    queryFn: getPostRecommend,
+    queryKey: ["posts", "followings"],
+    queryFn: getFollowingPosts,
     staleTime: 60 * 1000, // fresh => stale, 5분 기준. 현재는 1분으로 수정함.
     // fresh일 동안에는 서버에서 데이터를 가져오지 않는다. stale일 때 가져옴.
     gcTime: 300 * 1000,
