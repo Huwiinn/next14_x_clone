@@ -9,9 +9,10 @@ const generateDate = () => {
 };
 
 const User = [
-  { id: "elonmusk", nickname: "Elon Musk", image: faker.image.avatar() },
-  { id: "휘인", nickname: "Hwuiinn", image: faker.image.avatar() },
-  { id: "철수", nickname: "CukSu", image: faker.image.avatar() },
+  { id: "elonmusk", nickname: "Elon Musk", image: "/yRsRRjGO.jpg" },
+  { id: "zerohch0", nickname: "제로초", image: "/5Udwvqim.jpg" },
+  { id: "leoturtle", nickname: "레오", image: faker.image.avatar() },
+  { id: "hwuiinn", nickname: "휘인", image: faker.image.avatar() },
 ];
 
 export const handlers = [
@@ -22,7 +23,7 @@ export const handlers = [
         userId: 1,
         nickname: "목맥혀요",
         id: "NeckMac",
-        image: "/public/5Udwvqim.jpg",
+        image: faker.image.avatar(),
       },
       {
         headers: {
@@ -55,7 +56,6 @@ export const handlers = [
       },
     });
   }),
-
   http.get("/api/postRecommends", ({ request }) => {
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
@@ -357,11 +357,21 @@ export const handlers = [
       createdAt: generateDate(),
     });
   }),
-  http.get("api/users/:userId", ({ params }) => {
+  http.get("api/users/:userId", ({ request, params }) => {
     const { userId } = params;
+    const found = User.find((v) => v.id === userId);
 
-    return HttpResponse.json({
-      userId,
-    });
+    if (found) {
+      return HttpResponse.json(found);
+    } else {
+      return HttpResponse.json(
+        {
+          message: "유저를 찾지 못했습니다.",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
   }),
 ];
