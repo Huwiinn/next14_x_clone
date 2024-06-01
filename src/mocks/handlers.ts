@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, StrictResponse } from "msw";
 import { faker } from "@faker-js/faker";
 
 const generateDate = () => {
@@ -272,65 +272,61 @@ export const handlers = [
       },
     ]);
   }),
-  http.get(
-    "/api/users/:userId/posts/:postId/comments",
-    ({ request, params }) => {
-      const { userId, postId } = params;
-      const url = new URL(request.url);
-      const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
+  http.get("/api/posts/:postId/comments", ({ request, params }) => {
+    const { postId } = params;
+    const url = new URL(request.url);
+    const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
 
-      console.log("what's cursor?? : ", cursor);
-      return HttpResponse.json([
-        {
-          postId: cursor + 1,
-          user: User[0],
-          content: `${cursor + 1} ${userId} 게시글의 ${postId} 답글.`,
-          images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
-          createdAt: generateDate(),
-        },
-        {
-          postId: cursor + 2,
-          user: User[0],
-          content: `${cursor + 2} ${userId} ${postId} 답글.`,
-          images: [
-            { imageId: 1, link: faker.image.urlLoremFlickr() },
-            { imageId: 2, link: faker.image.urlLoremFlickr() },
-          ],
-          createdAt: generateDate(),
-        },
-        {
-          postId: cursor + 3,
-          user: User[1],
-          content: `${cursor + 3} ${userId} ${postId} 답글.`,
-          images: [],
-          createdAt: generateDate(),
-        },
-        {
-          postId: cursor + 4,
-          user: User[0],
-          content: `${cursor + 4} ${userId} ${postId} 답글.`,
-          images: [
-            { imageId: 1, link: faker.image.urlLoremFlickr() },
-            { imageId: 2, link: faker.image.urlLoremFlickr() },
-            { imageId: 3, link: faker.image.urlLoremFlickr() },
-            { imageId: 4, link: faker.image.urlLoremFlickr() },
-          ],
-          createdAt: generateDate(),
-        },
-        {
-          postId: cursor + 5,
-          user: User[2],
-          content: `${cursor + 5} ${userId} ${postId} 답글.`,
-          images: [
-            { imageId: 1, link: faker.image.urlLoremFlickr() },
-            { imageId: 2, link: faker.image.urlLoremFlickr() },
-            { imageId: 3, link: faker.image.urlLoremFlickr() },
-          ],
-          createdAt: generateDate(),
-        },
-      ]);
-    }
-  ),
+    return HttpResponse.json([
+      {
+        postId: cursor + 1,
+        user: User[0],
+        content: `${cursor + 1} 게시글의 ${postId} 답글.`,
+        images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 2,
+        user: User[0],
+        content: `${cursor + 2} ${postId} 답글.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 3,
+        user: User[1],
+        content: `${cursor + 3}  ${postId} 답글.`,
+        images: [],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 4,
+        user: User[0],
+        content: `${cursor + 4} ${postId} 답글.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+          { imageId: 4, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+      {
+        postId: cursor + 5,
+        user: User[2],
+        content: `${cursor + 5} ${postId} 답글.`,
+        images: [
+          { imageId: 1, link: faker.image.urlLoremFlickr() },
+          { imageId: 2, link: faker.image.urlLoremFlickr() },
+          { imageId: 3, link: faker.image.urlLoremFlickr() },
+        ],
+        createdAt: generateDate(),
+      },
+    ]);
+  }),
   http.get("api/followRecommends", ({ request }) => {
     return HttpResponse.json(User);
   }),
@@ -347,17 +343,29 @@ export const handlers = [
       { tagId: 9, title: "나인초", count: 1264 },
     ]);
   }),
-  http.get("api/users/:userId/posts/:postId", ({ request, params }) => {
-    const { userId, postId } = params;
+  http.get("api/posts/:postId", ({ request, params }): StrictResponse<any> => {
+    const { postId } = params;
+    if (parseInt(postId as string) > 10) {
+      return HttpResponse.json(
+        {
+          message: "게시물을 찾을 수 없습니다.",
+        },
+        { status: 404 }
+      );
+    }
     return HttpResponse.json({
       postId: 6,
       user: User[0],
-      content: `${userId} ${postId}의 내용. 단일 게시글 api 성공`,
-      images: [{ imageId: 1, link: faker.image.urlLoremFlickr() }],
+      content: `게시글 ${postId}의 내용. 단일 게시글 api 성공`,
+      images: [
+        { imageId: 1, link: faker.image.urlLoremFlickr() },
+        { imageId: 2, link: faker.image.urlLoremFlickr() },
+        { imageId: 3, link: faker.image.urlLoremFlickr() },
+      ],
       createdAt: generateDate(),
     });
   }),
-  http.get("api/users/:userId", ({ request, params }) => {
+  http.get("api/users/:userId", ({ request, params }): StrictResponse<any> => {
     const { userId } = params;
     const found = User.find((v) => v.id === userId);
 

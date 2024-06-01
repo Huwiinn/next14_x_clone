@@ -2,8 +2,16 @@
 
 import { useRef, useState } from "react";
 import style from "./commentForm.module.css";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function CommentForm() {
+type Props = {
+  id: string;
+};
+
+export default function CommentForm({ id }: Props) {
+  const queryClient = useQueryClient();
+  const post = queryClient.getQueryData(["post", id]);
+
   const [content, setContent] = useState<string>("");
 
   const imageRef = useRef<HTMLInputElement>(null);
@@ -20,6 +28,10 @@ export default function CommentForm() {
     id: "zerohch0",
     image: "/5Udwvqim.jpg",
   };
+
+  if (!post) {
+    return null;
+  }
 
   return (
     <form className={style.postForm} onSubmit={onSubmit}>

@@ -22,11 +22,12 @@ const UserPosts = ({ username }: Props) => {
   const queryClient = useQueryClient();
   const user = queryClient.getQueryData(["users", username]);
 
-
   if (user) {
     return data?.map((post) => {
       return <Post key={post.postId} post={post} />;
     });
+  } else {
+    return null;
   }
 };
 

@@ -6,7 +6,6 @@ import "dayjs/locale/ko";
 import ActionButtons from "./ActionButtons";
 import PostArticle from "./PostArticle";
 // {faker} 이런 방식을 '네임드 임포트' 라고 한다.
-import { faker } from "@faker-js/faker";
 import PostImages from "./PostImages";
 import { Post } from "@/model/Post";
 
@@ -18,21 +17,11 @@ type Props = { noImage?: boolean; post: Post };
 export default function Post({ noImage, post }: Props) {
   const target = post;
 
-  // 확률 반반일 때,
-  if (Math.random() > 0.5 && !noImage) {
-    target.images.push(
-      { imageId: 1, link: faker.image.urlLoremFlickr() },
-      { imageId: 2, link: faker.image.urlLoremFlickr() },
-      { imageId: 3, link: faker.image.urlLoremFlickr() },
-      { imageId: 4, link: faker.image.urlLoremFlickr() }
-    );
-  }
-
   return (
     <PostArticle post={target}>
       <div className={style.postWrapper}>
         <div className={style.postUserSection}>
-          <Link href={`/${target.user.id}`} className={style.postUserImage}>
+          <Link href={`/${target?.user.id}`} className={style.postUserImage}>
             <img src={target.user.image} alt={target.user.nickname} />
             <div className={style.postShade} />
           </Link>
@@ -50,9 +39,11 @@ export default function Post({ noImage, post }: Props) {
             </span>
           </div>
           <div>{target.content}</div>
-          <div className={style.postImageSection}>
-            <PostImages post={target} />
-          </div>
+          {!noImage && (
+            <div className={style.postImageSection}>
+              <PostImages post={target} />
+            </div>
+          )}
           <ActionButtons white />
         </div>
       </div>
