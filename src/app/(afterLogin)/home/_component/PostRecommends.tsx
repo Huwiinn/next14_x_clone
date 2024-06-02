@@ -31,7 +31,7 @@ export default function PostRecommends() {
   });
 
   const { ref, inView } = useInView({
-    threshold: 0.5,
+    threshold: 0,
     delay: 0,
   });
 
