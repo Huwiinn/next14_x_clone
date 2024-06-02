@@ -31,7 +31,7 @@ export default function PostRecommends() {
   });
 
   const { ref, inView } = useInView({
-    threshold: 0,
+    threshold: 1,
     delay: 0,
   });
 
@@ -40,7 +40,7 @@ export default function PostRecommends() {
     if (inView) {
       !isFetching && hasNextPage && fetchNextPage();
     }
-  }, [inView, hasNextPage, fetchNextPage, isFetching]);
+  }, [inView]);
 
   console.log("data : ", data);
 

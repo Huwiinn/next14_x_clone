@@ -31,6 +31,7 @@ export default function FollowingPosts() {
 
   useEffect(() => {
     // 화면에 보일 때 실행
+
     if (inView) {
       !isFetching && hasNextPage && fetchNextPage();
     }
