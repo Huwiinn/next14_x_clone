@@ -24,7 +24,14 @@ export default function Comments({ id }: Props) {
     enabled: !!post,
   });
   if (post) {
-    return data?.map((post) => <Post post={post} key={post.postId} />);
+    return (
+      <>
+        {data?.map((post) => (
+          <Post post={post} key={post.postId} />
+        ))}
+      </>
+    );
   }
+
   return null;
 }

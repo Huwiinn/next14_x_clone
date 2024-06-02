@@ -5,7 +5,7 @@ import Tab from "./_component/Tab";
 import SearchResult from "./_component/SearchResult";
 
 type Props = {
-  searchParams: { q?: string; f?: string; pf?: string };
+  searchParams: { q: string; f?: string; pf?: string };
 };
 
 export default function Search({ searchParams }: Props) {

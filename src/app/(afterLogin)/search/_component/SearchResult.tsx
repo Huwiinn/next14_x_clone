@@ -9,7 +9,7 @@ type Props = {
   searchParams: { q: string; f?: string; pf?: string };
 };
 
-export default function SearchResult({ searchParams }: Props) {
+export default function SearchResult({ searchParams }: Props): JSX.Element {
   const { data } = useQuery<
     IPost[],
     Object,
@@ -22,7 +22,12 @@ export default function SearchResult({ searchParams }: Props) {
     gcTime: 300 * 1000,
   });
 
-  return data?.map((post) => {
-    return <Post key={post.postId} post={post} />;
-  });
+  return (
+    <>
+      {data?.map((post) => {
+        return <Post key={post.postId} post={post} />
+      })}
+      ;
+    </>
+  );
 }

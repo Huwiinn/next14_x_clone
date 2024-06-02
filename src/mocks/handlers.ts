@@ -51,6 +51,9 @@ export const handlers = [
   http.get("/api/postRecommends", ({ request }) => {
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
+
+    console.log("what's cursor?? : ", cursor);
+
     return HttpResponse.json([
       {
         postId: cursor + 1,
@@ -213,7 +216,6 @@ export const handlers = [
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
 
-    console.log("what's cursor?? : ", cursor);
     return HttpResponse.json([
       {
         postId: cursor + 1,
