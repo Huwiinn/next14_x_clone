@@ -40,7 +40,7 @@ const SinglePage = async ({ params }: Props) => {
         </div>
         <div className={style.postAndCommentFormSection}>
           <SinglePost id={id} />
-          <CommentForm />
+          <CommentForm id={id} />
           <div>
             {/* 답글들이 보여질 곳임 */}
             <Comments id={id} />

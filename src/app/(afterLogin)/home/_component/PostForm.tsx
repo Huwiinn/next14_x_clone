@@ -8,15 +8,12 @@ import {
   useState,
 } from "react";
 import style from "./postForm.module.css";
+import { useSession } from "next-auth/react";
 
 export default function PostForm() {
   const imageRef = useRef<HTMLInputElement>(null);
   const [content, setContent] = useState<string>("");
-
-  const me = {
-    id: "zerohch0",
-    image: "favicon.png",
-  };
+  const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
 
   const onChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setContent(e.target.value);
@@ -34,7 +31,7 @@ export default function PostForm() {
     <form className={style.postForm} onSubmit={onSubmit}>
       <div className={style.postUserSection}>
         <div className={style.postUserImage}>
-          <img src={me.image} alt={me.id} />
+          <img src={me?.user?.image as string} alt={me?.user?.id as string} />
         </div>
       </div>
       <div className={style.postInputSection}>

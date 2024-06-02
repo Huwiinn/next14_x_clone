@@ -3,14 +3,17 @@
 import { useRef, useState } from "react";
 import style from "./commentForm.module.css";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 type Props = {
   id: string;
 };
 
 export default function CommentForm({ id }: Props) {
+  const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
+
   const queryClient = useQueryClient();
-  const post = queryClient.getQueryData(["post", id]);
+  const post = queryClient.getQueryData(["posts", id]);
 
   const [content, setContent] = useState<string>("");
 
@@ -24,11 +27,6 @@ export default function CommentForm({ id }: Props) {
     setContent(e.target.value);
   };
 
-  const me = {
-    id: "zerohch0",
-    image: "/5Udwvqim.jpg",
-  };
-
   if (!post) {
     return null;
   }
@@ -37,7 +35,10 @@ export default function CommentForm({ id }: Props) {
     <form className={style.postForm} onSubmit={onSubmit}>
       <div className={style.postUserSection}>
         <div className={style.postUserImage}>
-          <img src={me.image} alt={me.id} />
+          <img
+            src={me?.user?.image as string}
+            alt={me?.user?.email as string}
+          />
         </div>
       </div>
       <div className={style.postInputSection}>

@@ -1,17 +1,28 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import styles from "./searchBar.module.css";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import SearchForm from "./SearchForm";
 
 const SearchBar = () => {
   const radioRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const onChangeAll = () => {};
+  const onChangeAll = () => {
+    // 아래처럼 SearchParams를 직접 만들어 줄 수도 있음. 해당 방법으로 직접 만들어주면 searchParams를 제거할 수 있다.
+    const newSearchParams = new URLSearchParams(searchParams); // 기존 searchParams 인자로 넣기
+    newSearchParams.delete("pf");
+    router.replace(`/search?${newSearchParams.toString()}`);
+  };
+
   const onChangeFollow = () => {
-    radioRef.current?.click();
-    // console.log("radioRef.current?.click() : ", radioRef.current?.click());
+    // 아래처럼 SearchParams를 직접 만들어 줄 수도 있음. 해당 방법으로 직접 만들어주면 searchParams를 제거할 수 있다.
+    const newSearchParams = new URLSearchParams(searchParams); // 기존 searchParams 인자로 넣기
+    newSearchParams.set("pf", "on");
+    console.log("newSearchParams : ", newSearchParams);
+    router.replace(`/search?${newSearchParams.toString()}`);
   };
 
   if (pathname === "/explore") {
@@ -46,6 +57,7 @@ const SearchBar = () => {
                 name="pf"
                 value="on"
                 ref={radioRef}
+                onChange={onChangeFollow}
               />
             </div>
           </div>
@@ -57,9 +69,8 @@ const SearchBar = () => {
                 id="everywhere"
                 type="radio"
                 name="pf"
-                defaultChecked
                 ref={radioRef}
-                onChange={onChangeAll}
+                // onChange={onChangeAll}
               />
             </div>
             <div className={styles.radio}>
@@ -70,7 +81,7 @@ const SearchBar = () => {
                 name="pf"
                 value="on"
                 ref={radioRef}
-                onChange={onChangeFollow}
+                // onChange={onChangeFollow}
               />
             </div>
           </div>

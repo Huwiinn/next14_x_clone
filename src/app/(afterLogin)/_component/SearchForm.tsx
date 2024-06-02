@@ -4,13 +4,21 @@ import React from "react";
 import styles from "@/app/(afterLogin)/_component/searchBar.module.css";
 import { useRouter } from "next/navigation";
 
-type Props = { q?: string };
+type Props = { q?: string; f?: string };
 
-const SearchForm = ({ q }: Props) => {
+const SearchForm = ({ q, f }: Props) => {
   const router = useRouter();
 
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
+
+
+    if (f && q) {
+      return router.push(
+        `/search?q=${event.currentTarget.search.value}&f=live`
+      );
+    }
+
     router.push(`/search?q=${event.currentTarget.search.value}`);
   };
 

@@ -3,10 +3,12 @@
 import style from "./modal.module.css";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function TweetModal() {
   const [content, setContent] = useState();
   const imageRef = useRef<HTMLInputElement>(null);
+  const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
 
   const router = useRouter();
 
@@ -16,11 +18,6 @@ export default function TweetModal() {
   };
   const onClickButton = () => {};
   const onChangeContent = () => {};
-
-  const me = {
-    id: "zerohch0",
-    image: "/5Udwvqim.jpg",
-  };
 
   return (
     <div className={style.modalBackground}>
@@ -43,7 +40,10 @@ export default function TweetModal() {
           <div className={style.modalBody}>
             <div className={style.postUserSection}>
               <div className={style.postUserImage}>
-                <img src={me.image} alt={me.id} />
+                <img
+                  src={me?.user?.image as string}
+                  alt={me?.user?.email as string}
+                />
               </div>
             </div>
             <div className={style.inputDiv}>

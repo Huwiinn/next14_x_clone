@@ -14,7 +14,7 @@ export default function SearchResult({ searchParams }: Props) {
     IPost[],
     Object,
     IPost[],
-    [_1: string, _2: string, Props["searchParams"]]
+    [_1: string, _2: string, _3: Props["searchParams"]]
   >({
     queryKey: ["posts", "search", searchParams],
     queryFn: getSearchResult,

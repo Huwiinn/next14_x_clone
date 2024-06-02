@@ -7,19 +7,23 @@ export default function Tab() {
   const [current, setCurrent] = useState("hot");
 
   const router = useRouter();
-
   const searchParams = useSearchParams();
+
+  // 새로고침시에 최신 탭일 때, 탭 state가 유지되어야 함.
+  // zustand 적용할 때, 해보기
 
   const onClickHot = () => {
     setCurrent("hot");
-    // searchParams.get은 q 뒤에 있는 searchParams를 가지고 와라는 뜻
-    router.replace(`/search?q=${searchParams.get("q")}`);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.delete("f");
+    router.replace(`/search?${newSearchParams.toString()}`);
   };
 
   const onClickNew = () => {
     setCurrent("new");
-    // searchParams.toString()은 현재 searchParams를 그대로 다 사용하라는 뜻
-    router.replace(`/search?${searchParams.toString()}&f=live`);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("f", "live");
+    router.replace(`/search?${newSearchParams.toString()}`);
   };
 
   return (

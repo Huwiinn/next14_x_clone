@@ -18,19 +18,11 @@ const User = [
 export const handlers = [
   http.post("/api/login", () => {
     console.log("로그인");
-    return HttpResponse.json(
-      {
-        userId: 1,
-        nickname: "목맥혀요",
-        id: "NeckMac",
-        image: faker.image.avatar(),
+    return HttpResponse.json(User[3], {
+      headers: {
+        "set-cookie": "connect.sid=msw-cookie;HttpOnly;Path='/'",
       },
-      {
-        headers: {
-          "set-cookie": "connect.sid=msw-cookie;HttpOnly;Path='/'",
-        },
-      }
-    );
+    });
   }),
   http.post("/api/logout", () => {
     console.log("로그아웃");
