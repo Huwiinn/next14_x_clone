@@ -15,6 +15,11 @@ const User = [
   { id: "hwuiinn", nickname: "휘인", image: faker.image.avatar() },
 ];
 
+const delay = (ms: number) =>
+  new Promise((res, rej) => {
+    setTimeout(res, ms);
+  });
+
 export const handlers = [
   http.post("/api/login", () => {
     console.log("로그인");
@@ -48,11 +53,15 @@ export const handlers = [
       },
     });
   }),
-  http.get("/api/postRecommends", ({ request }) => {
+
+  http.get("/api/postRecommends", async ({ request }) => {
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
 
     console.log("what's cursor?? : ", cursor);
+
+    await delay(3000);
+    console.log("포스팅 불러오기--------- ");
 
     return HttpResponse.json([
       {
@@ -158,10 +167,12 @@ export const handlers = [
       },
     ]);
   }),
-  http.get("/api/followingPosts", ({ request }) => {
+  http.get("/api/followingPosts", async ({ request }) => {
+    console.log("--------------------------------팔로잉중 게시글");
+    await delay(3000);
+
     const url = new URL(request.url);
     const cursor = parseInt(url.searchParams.get("cursor") as string) || 0;
-
     return HttpResponse.json([
       {
         postId: cursor + 1,

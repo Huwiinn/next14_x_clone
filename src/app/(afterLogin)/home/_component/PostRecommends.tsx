@@ -6,9 +6,20 @@ import Post from "@/app/(afterLogin)/_component/Post";
 import { Post as IPost } from "@/model/Post";
 import { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import styles from "../home.module.css";
 
 export default function PostRecommends() {
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<
+  // isPending은 맨 처음에는 true이다.
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isPending,
+    isLoading,
+    isError,
+  } = useInfiniteQuery<
     IPost[],
     Object,
     InfiniteData<IPost[]>,
@@ -42,7 +53,41 @@ export default function PostRecommends() {
     }
   }, [inView]);
 
-  console.log("data : ", data);
+  // 로딩 시에 보여줄 컴포넌트
+  if (isLoading || isPending) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <svg
+          className={styles.loader}
+          height="100%"
+          viewBox="0 0 32 32"
+          width={40}>
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            strokeWidth="4"
+            style={{ stroke: "rgb(29, 155, 240)", opacity: 0.2 }}></circle>
+          <circle
+            cx="16"
+            cy="16"
+            fill="none"
+            r="14"
+            strokeWidth="4"
+            style={{
+              stroke: "rgb(29, 155, 240)",
+              strokeDasharray: 80,
+              strokeDashoffset: 60,
+            }}></circle>
+        </svg>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <h1>에러가 발생했습니다. 처리해야합니다.</h1>;
+  }
 
   return (
     <>
