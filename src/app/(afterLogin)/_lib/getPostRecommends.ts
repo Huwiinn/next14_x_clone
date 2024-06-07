@@ -4,9 +4,9 @@ type Props = {
 
 // 해당 함수는 서버컴포넌트에서 react-query로 데이터를 가져오는 모습
 export const getPostRecommends = async ({ pageParam }: Props) => {
-  console.log("pageParam : ", pageParam);
+  // console.log("pageParam : ", pageParam);
   const res = await fetch(
-    `http://localhost:9090/api/postRecommends?cursor=${pageParam}`,
+    `http://localhost:9090/api/posts/recommends?cursor=${pageParam}`,
     {
       next: {
         tags: ["posts", "recommends"],

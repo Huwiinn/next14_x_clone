@@ -90,8 +90,8 @@ export default function LoginModal() {
                 placeholder=""
               />
             </div>
+            <div className={styles.message}>{message}</div>
           </div>
-          <div className={styles.message}>{message}</div>
           <div className={styles.modalFooter}>
             <button
               aria-label="로그인 버튼"

@@ -9,11 +9,18 @@ import {
 } from "react";
 import style from "./postForm.module.css";
 import { useSession } from "next-auth/react";
+import { Session } from "@auth/core/types";
+import { onTextAreaResizeHeight } from "../../_lib/onTextAreaResizeHeight";
 
-export default function PostForm() {
-  const imageRef = useRef<HTMLInputElement>(null);
+type Props = {
+  me: Session | null;
+};
+
+export default function PostForm({ me }: Props) {
   const [content, setContent] = useState<string>("");
-  const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
+  const imageRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  // const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
 
   const onChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     setContent(e.target.value);
@@ -37,8 +44,12 @@ export default function PostForm() {
       <div className={style.postInputSection}>
         <textarea
           value={content}
-          onChange={onChange}
+          onChange={(e) => {
+            onChange(e);
+            onTextAreaResizeHeight(textAreaRef);
+          }}
           placeholder="무슨 일이 일어나고 있나요?"
+          ref={textAreaRef}
         />
         <div className={style.postButtonSection}>
           <div className={style.footerButtons}>

@@ -20,6 +20,8 @@ type Props = { children: ReactNode; modal: ReactNode };
 const AfterLoginLayout = async ({ children, modal }: Props) => {
   const session = await auth();
 
+  console.log("session : ", session);
+
   return (
     <div className={styles.container}>
       <header className={styles.leftSectionWrapper}>
@@ -58,7 +60,7 @@ const AfterLoginLayout = async ({ children, modal }: Props) => {
                 </>
               )}
             </div>
-            <LogoutButton />
+            <LogoutButton me={session} />
           </div>
         </section>
       </header>

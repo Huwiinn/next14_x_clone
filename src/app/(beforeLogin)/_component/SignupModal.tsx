@@ -6,6 +6,8 @@ import onSubmit from "../_lib/signup";
 import { useFormState, useFormStatus } from "react-dom";
 
 const showMessage = (message: string | undefined) => {
+  console.log("111 message : ", message);
+
   if (message === "no_id") {
     return "아이디가 없습니다.";
   }
@@ -18,14 +20,19 @@ const showMessage = (message: string | undefined) => {
   if (message === "no_image") {
     return "사진을 넣어주세요.";
   }
+  if (message === "user_exists") {
+    return "이미 있는 사용자입니다.";
+  }
 
   return "";
 };
 
 export default function SignupModal() {
   const [state, formAction] = useFormState(onSubmit, { message: "common" });
+  // state에는 기본적으로 message 속성이 있음.
   const { pending } = useFormStatus();
 
+  console.log("state : ", state);
   return (
     <>
       <div className={style.modalBackground}>
@@ -50,12 +57,12 @@ export default function SignupModal() {
                 />
               </div>
               <div className={style.inputDiv}>
-                <label className={style.inputLabel} htmlFor="name">
+                <label className={style.inputLabel} htmlFor="nickname">
                   닉네임
                 </label>
                 <input
-                  id="name"
-                  name="name"
+                  id="nickname"
+                  name="nickname"
                   className={style.input}
                   type="text"
                   placeholder="이름을 입력해주세요."

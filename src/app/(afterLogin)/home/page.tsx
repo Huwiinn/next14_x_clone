@@ -5,13 +5,16 @@ import PostForm from "./_component/PostForm";
 import TabProvider from "./_component/TabProvider";
 import TabDeciderSuspense from "./_component/TabDeciderSuspense";
 import Loading from "./loading";
+import { auth } from "@/auth";
 
 const Home = async () => {
+  const session = await auth();
+
   return (
     <main className={styles.main}>
       <TabProvider>
         <Tab />
-        <PostForm />
+        <PostForm me={session} />
         <Suspense fallback={<Loading />}>
           {/* @ts-expect-error Async Server Component */}
           <TabDeciderSuspense />

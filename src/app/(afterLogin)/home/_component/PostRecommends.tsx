@@ -10,7 +10,6 @@ import styles from "../home.module.css";
 
 export default function PostRecommends() {
   // isPending은 맨 처음에는 true이다.
-
   const {
     data,
     fetchNextPage,
@@ -40,6 +39,9 @@ export default function PostRecommends() {
     // ex ) staleTime - 3분 / gcTime - 1분 => [3분동안 캐싱데이터를 사용하려는데, 1분이 지나니 캐싱데이터가 다 사라짐. 사용할 수 없게됨]
     // ✅ gcTime은 staleTime보다 무조건 커야한다.
   });
+
+  console.log("data : ", data);
+  console.log("22222", isFetching, isPending, isLoading, isError);
 
   const { ref, inView } = useInView({
     threshold: 1,

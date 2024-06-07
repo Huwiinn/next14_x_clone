@@ -9,8 +9,11 @@ const onSubmit = async (prevState: any, formData: FormData) => {
   if (!formData.get("id") || !(formData.get("id") as string)?.trim()) {
     return { message: "no_id" };
   }
-  if (!formData.get("name") || !(formData.get("name") as string)?.trim()) {
-    return { message: "no_name" };
+  if (
+    !formData.get("nickname") ||
+    !(formData.get("nickname") as string)?.trim()
+  ) {
+    return { message: "no_nickname" };
   }
   if (
     !formData.get("password") ||
@@ -30,7 +33,7 @@ const onSubmit = async (prevState: any, formData: FormData) => {
       {
         method: "post",
         body: formData,
-        credentials: "include", // 이 속성이 있어야 쿠키가 전달된다.
+        credentials: "include", // 이 속성이 있어야 쿠키가 전달된다. 그렇기 때문에 필수 속성임.
       }
     );
 

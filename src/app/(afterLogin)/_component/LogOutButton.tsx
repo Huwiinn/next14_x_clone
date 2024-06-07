@@ -3,13 +3,18 @@
 import style from "./logOutButton.module.css";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Session } from "@auth/core/types";
 
-export default function LogoutButton() {
+type Props = {
+  me: Session | null;
+};
+
+export default function LogoutButton({ me }: Props) {
   const router = useRouter();
-  const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
+  // const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
 
   const onLogout = () => {
-    signOut({ redirect: false });
+    signOut({ redirect: true });
     router.replace("/");
   };
 
