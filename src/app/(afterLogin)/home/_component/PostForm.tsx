@@ -18,6 +18,9 @@ type Props = {
 
 export default function PostForm({ me }: Props) {
   const [content, setContent] = useState<string>("");
+  const [previewImgs, setPreviewImgs] = useState<
+    Array<{ dataUrl: string; file: File } | null>
+  >([]);
   const imageRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   // const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
@@ -26,12 +29,55 @@ export default function PostForm({ me }: Props) {
     setContent(e.target.value);
   };
 
-  const onSubmit: FormEventHandler = (e: FormEvent<Element>) => {
+  const onSubmit: FormEventHandler = async (e: FormEvent<Element>) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("content", content);
+    previewImgs.forEach((imgFile) => {
+      imgFile && formData.append("images", imgFile?.file);
+    });
+
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
   };
 
   const onClickButton = () => {
     imageRef.current?.click();
+  };
+
+  const onUploadImage: ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+
+    // e.target.files : 파일 배열
+
+    if (e.target.files) {
+      Array.from(e.target.files).forEach((file, index) => {
+        const reader = new FileReader();
+        // 2. 이벤트 트리거가 되어 내부 콜백함수 실행.
+        reader.onloadend = () => {
+          setPreviewImgs((previewImg) => {
+            const prev = [...previewImg];
+            prev[index] = { dataUrl: reader.result as string, file };
+            return prev;
+          });
+        };
+        // 1. 파일을 읽고
+        reader.readAsDataURL(file); // 이 과정을 거치면 무조건 string 타입으로 나옴
+        // dataURL은 이미지데이터를 문자열로 나타낸 것. img src에 사용할 수 있다.
+      });
+    }
+  };
+
+  const onRemoveImage = (idx: number) => {
+    setPreviewImgs((prevPriviews) => {
+      // 여기서 얇은 복사를 하는 이유를 gpt에게 물어보고 혼자서도 알아보기 (무조건)
+      const prev = [...prevPriviews];
+      prev[idx] = null;
+      return prev;
+    });
   };
 
   return (
@@ -51,6 +97,19 @@ export default function PostForm({ me }: Props) {
           placeholder="무슨 일이 일어나고 있나요?"
           ref={textAreaRef}
         />
+
+        <div>
+          {previewImgs.map((image, idx) => {
+            return (
+              image && (
+                <div key={idx} onClick={() => onRemoveImage(idx)}>
+                  <img key={idx} src={image.dataUrl} alt="이미지 미리보기" />
+                </div>
+              )
+            );
+          })}
+        </div>
+
         <div className={style.postButtonSection}>
           <div className={style.footerButtons}>
             <div className={style.footerButtonLeft}>
@@ -60,6 +119,7 @@ export default function PostForm({ me }: Props) {
                 multiple
                 hidden
                 ref={imageRef}
+                onChange={onUploadImage}
               />
               <button
                 title="이미지 추가 버튼"
