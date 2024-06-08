@@ -40,8 +40,8 @@ export default function PostRecommends() {
     // ✅ gcTime은 staleTime보다 무조건 커야한다.
   });
 
-  console.log("data : ", data);
-  console.log("22222", isFetching, isPending, isLoading, isError);
+  // console.log("data : ", data);
+  // console.log("22222", isFetching, isPending, isLoading, isError);
 
   const { ref, inView } = useInView({
     threshold: 1,

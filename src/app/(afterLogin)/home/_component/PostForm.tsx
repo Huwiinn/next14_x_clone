@@ -11,6 +11,8 @@ import style from "./postForm.module.css";
 import { useSession } from "next-auth/react";
 import { Session } from "@auth/core/types";
 import { onTextAreaResizeHeight } from "../../_lib/onTextAreaResizeHeight";
+import { QueryClient } from "@tanstack/react-query";
+import { Post as IPost } from "@/model/Post";
 
 type Props = {
   me: Session | null;
@@ -23,6 +25,8 @@ export default function PostForm({ me }: Props) {
   >([]);
   const imageRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const queryClient = new QueryClient();
+
   // const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
 
   const onChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
@@ -37,11 +41,49 @@ export default function PostForm({ me }: Props) {
       imgFile && formData.append("images", imgFile?.file);
     });
 
-    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, {
-      method: "POST",
-      credentials: "include",
-      body: formData,
-    });
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`,
+        {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+        }
+      );
+
+      if (response.status === 201) {
+        setContent("");
+        setPreviewImgs([]);
+
+        const newPost = await response.json();
+
+        queryClient.setQueryData(
+          ["posts", "recommends"],
+          (prevData: { pages: IPost[][] }) => {
+            const shallow = { ...prevData, pages: [...prevData.pages] };
+
+            shallow.pages[0] = [...shallow.pages[0]];
+            shallow.pages[0].unshift(newPost);
+
+            return shallow;
+          }
+        );
+        queryClient.setQueryData(
+          ["posts", "followings"],
+          (prevData: { pages: IPost[][] }) => {
+            const shallow = { ...prevData, pages: [...prevData.pages] };
+
+            shallow.pages[0] = [...shallow.pages[0]];
+            shallow.pages[0].unshift(newPost);
+
+            return shallow;
+          }
+        );
+      }
+    } catch (error) {
+      console.log("Post Submit error : ", error);
+      // 이 부분 toastUI 적용해서 에러 띄워보기
+    }
   };
 
   const onClickButton = () => {
@@ -98,11 +140,14 @@ export default function PostForm({ me }: Props) {
           ref={textAreaRef}
         />
 
-        <div>
+        <div className={style.previewWrap}>
           {previewImgs.map((image, idx) => {
             return (
               image && (
-                <div key={idx} onClick={() => onRemoveImage(idx)}>
+                <div
+                  key={idx}
+                  onClick={() => onRemoveImage(idx)}
+                  className={style.previewImg}>
                   <img key={idx} src={image.dataUrl} alt="이미지 미리보기" />
                 </div>
               )

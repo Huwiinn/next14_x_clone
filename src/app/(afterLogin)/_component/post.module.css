@@ -71,9 +71,6 @@
   text-decoration: underline;
 }
 
-.postImageSection {
-}
-
 .postBody {
   display: flex;
   flex-direction: column;
@@ -90,8 +87,9 @@
 
 .postImageSection {
   display: inline-block;
-  margin-top: 12px;
+  height: 100%;
   width: 100%;
+  margin-top: 12px;
   border-radius: 16px;
 }
 .postImageSection.oneImage {
@@ -121,7 +119,7 @@
   border-bottom-right-radius: 16px;
 }
 .postImageSection.threeImage {
-  height: 272px;
+  height: 100%;
   display: flex;
   flex-direction: row;
   gap: 2px;
