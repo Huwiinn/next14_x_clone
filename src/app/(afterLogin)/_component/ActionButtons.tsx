@@ -1,6 +1,7 @@
 "use client";
 import style from "./post.module.css";
 import cx from "classnames";
+import { MouseEventHandler } from "react";
 
 type Props = { white?: boolean };
 
@@ -11,20 +12,12 @@ export default function ActionButtons({ white }: Props) {
 
   const onClickComment = () => {};
   const onClickRepost = () => {};
-  const onClickHeart = () => {};
 
-  // const [btnToggle, setBtnToggle] = useState(false);
-  // const [btnToggle2, setBtnToggle2] = useState(false);
-
-  // const onToggle = () => {
-  //   setBtnToggle((prev: boolean): boolean => !prev);
-  //   alert(btnToggle);
-  // };
-
-  // const onToggle2 = () => {
-  //   setBtnToggle2((prev: boolean): boolean => !prev);
-  //   alert(btnToggle2);
-  // };
+  const onClickHeart: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    console.log("heart");
+  };
 
   return (
     <div className={style.actionButtons}>

@@ -18,7 +18,6 @@ type Props = {
 };
 
 const PostImages = ({ post }: Props) => {
-  console.log("post : ", post);
   if (!post.Images) return null;
   if (!post.Images.length) return null;
 
@@ -62,14 +61,16 @@ const PostImages = ({ post }: Props) => {
   if (post.Images.length === 3) {
     return (
       <div className={cx(style.postImageSection, style.threeImage)}>
-        <Link
-          href={`/${post.User?.id}/status/${post.postId}/photo/${post.Images[0].imageId}`}
-          style={{
-            backgroundImage: `url(${post.Images[0]?.link})`,
-            backgroundSize: "cover",
-          }}>
-          <img src={post.Images[0]?.link} alt="이미지 사진" />
-        </Link>
+        <div className={style.firstImage}>
+          <Link
+            href={`/${post.User?.id}/status/${post.postId}/photo/${post.Images[0].imageId}`}
+            style={{
+              backgroundImage: `url(${post.Images[0]?.link})`,
+              backgroundSize: "cover",
+            }}>
+            <img src={post.Images[0]?.link} alt="이미지 사진" />
+          </Link>
+        </div>
 
         <div>
           <Link

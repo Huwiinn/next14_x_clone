@@ -11,7 +11,7 @@ import style from "./postForm.module.css";
 import { useSession } from "next-auth/react";
 import { Session } from "@auth/core/types";
 import { onTextAreaResizeHeight } from "../../_lib/onTextAreaResizeHeight";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { Post as IPost } from "@/model/Post";
 
 type Props = {
@@ -27,36 +27,27 @@ export default function PostForm({ me }: Props) {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = new QueryClient();
 
-  // const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
+  const mutation = useMutation({
+    mutationFn: async (e: FormEvent) => {
+      e.preventDefault();
+      const formData = new FormData();
+      formData.append("content", content);
+      previewImgs.forEach((imgFile) => {
+        imgFile && formData.append("images", imgFile?.file);
+      });
 
-  const onChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setContent(e.target.value);
-  };
+      return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`, {
+        method: "POST",
+        credentials: "include",
+        body: formData,
+      });
+    },
+    async onSuccess(response, variable) {
+      setContent("");
+      setPreviewImgs([]);
+      const newPost = await response.json();
 
-  const onSubmit: FormEventHandler = async (e: FormEvent<Element>) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("content", content);
-    previewImgs.forEach((imgFile) => {
-      imgFile && formData.append("images", imgFile?.file);
-    });
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`,
-        {
-          method: "POST",
-          credentials: "include",
-          body: formData,
-        }
-      );
-
-      if (response.status === 201) {
-        setContent("");
-        setPreviewImgs([]);
-
-        const newPost = await response.json();
-
+      if (queryClient.getQueryData(["posts", "recommends"])) {
         queryClient.setQueryData(
           ["posts", "recommends"],
           (prevData: { pages: IPost[][] }) => {
@@ -68,6 +59,9 @@ export default function PostForm({ me }: Props) {
             return shallow;
           }
         );
+      }
+
+      if (queryClient.getQueryData(["posts", "followings"])) {
         queryClient.setQueryData(
           ["posts", "followings"],
           (prevData: { pages: IPost[][] }) => {
@@ -80,11 +74,72 @@ export default function PostForm({ me }: Props) {
           }
         );
       }
-    } catch (error) {
+    },
+    onError(error) {
       console.log("Post Submit error : ", error);
-      // 이 부분 toastUI 적용해서 에러 띄워보기
-    }
+      alert("Post Submit error");
+      //     // 이 부분 toastUI 적용해서 에러 띄워보기
+    },
+  });
+
+  // const { data: me } = useSession(); // 클라이언트에서만 사용가능. 유저 정보를 불러온다.
+
+  const onChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    setContent(e.target.value);
   };
+
+  // const onSubmit: FormEventHandler = async (e: FormEvent<Element>) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append("content", content);
+  //   previewImgs.forEach((imgFile) => {
+  //     imgFile && formData.append("images", imgFile?.file);
+  //   });
+
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts`,
+  //       {
+  //         method: "POST",
+  //         credentials: "include",
+  //         body: formData,
+  //       }
+  //     );
+
+  //     if (response.status === 201) {
+  //       setContent("");
+  //       setPreviewImgs([]);
+
+  //       const newPost = await response.json();
+
+  //       queryClient.setQueryData(
+  //         ["posts", "recommends"],
+  //         (prevData: { pages: IPost[][] }) => {
+  //           const shallow = { ...prevData, pages: [...prevData.pages] };
+
+  //           shallow.pages[0] = [...shallow.pages[0]];
+  //           shallow.pages[0].unshift(newPost);
+
+  //           return shallow;
+  //         }
+  //       );
+  //       queryClient.setQueryData(
+  //         ["posts", "followings"],
+  //         (prevData: { pages: IPost[][] }) => {
+  //           const shallow = { ...prevData, pages: [...prevData.pages] };
+
+  //           shallow.pages[0] = [...shallow.pages[0]];
+  //           shallow.pages[0].unshift(newPost);
+
+  //           return shallow;
+  //         }
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log("Post Submit error : ", error);
+  //     // 이 부분 toastUI 적용해서 에러 띄워보기
+  //   }
+  // };
 
   const onClickButton = () => {
     imageRef.current?.click();
@@ -123,7 +178,7 @@ export default function PostForm({ me }: Props) {
   };
 
   return (
-    <form className={style.postForm} onSubmit={onSubmit}>
+    <form className={style.postForm} onSubmit={mutation.mutate}>
       <div className={style.postUserSection}>
         <div className={style.postUserImage}>
           <img src={me?.user?.image as string} alt={me?.user?.id as string} />

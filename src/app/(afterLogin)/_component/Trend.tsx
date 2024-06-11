@@ -9,7 +9,9 @@ type Props = {
 
 const Trend = ({ trend }: Props) => {
   return (
-    <Link href={`./search?q=${trend.title}`} className={styles.container}>
+    <Link
+      href={`./search?q=${encodeURIComponent(trend.title)}`}
+      className={styles.container}>
       <div className={styles.title}>실시간 트렌드</div>
       <div className={styles.title}>{trend.title}</div>
       <div className={styles.count}>{trend.count.toLocaleString()} posts</div>

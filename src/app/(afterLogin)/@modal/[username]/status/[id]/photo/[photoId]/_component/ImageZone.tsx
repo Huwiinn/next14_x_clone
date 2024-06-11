@@ -19,18 +19,16 @@ const ImageZone = ({ id }: Props) => {
     gcTime: 300 * 1000,
   });
 
-  console.log("post :", post);
-
-  if (!post?.images[0]) {
+  if (!post?.Images[0]) {
     return null;
   }
 
   return (
     <div className={style.imageZone}>
-      <img src={post.images[0].link} alt={post.content} />
+      <img src={post.Images[0].link} alt={post.content} />
       <div
         className={style.image}
-        style={{ backgroundImage: `url(${post.images[0].link})` }}
+        style={{ backgroundImage: `url(${post.Images[0].link})` }}
       />
       <div className={style.buttonZone}>
         <div className={style.buttonInner}>

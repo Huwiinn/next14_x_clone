@@ -6,21 +6,24 @@ export const getSearchResult: QueryFunction<
   [_1: string, _2: string, searchParams: { q: string; f?: string; pf?: string }]
 > = async ({ queryKey }) => {
   const [_1, _2, searchParams] = queryKey;
+  // const urlSearchParams = new URLSearchParams(searchParams);
 
   const res = await fetch(
-    `http://localhost:9090/api/search/${
+    `http://localhost:9090/api/posts?cursor=0&q=${encodeURIComponent(
       searchParams.q
-    }?${searchParams.toString()}`,
+    )}`,
+
     {
       next: {
         tags: ["posts", "search", searchParams.q],
       },
       cache: "no-store",
+      credentials: "include",
     }
   );
 
-  if (!res.ok) {
-    throw new Error("데이터를 불러오는 데 실패했습니다.");
+  http: if (!res.ok) {
+    throw new Error("검색 결과 데이터를 불러오는 데 실패했습니다.");
   }
 
   return res.json();

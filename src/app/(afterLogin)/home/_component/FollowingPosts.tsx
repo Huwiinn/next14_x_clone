@@ -43,6 +43,7 @@ export default function FollowingPosts() {
     return <Loading />;
   }
 
+  console.log("팔로우중 data : ", data);
   return (
     <>
       {data?.pages.map((page, idx) => (

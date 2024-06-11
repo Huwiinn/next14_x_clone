@@ -22,12 +22,13 @@ export default function SearchResult({ searchParams }: Props): JSX.Element {
     gcTime: 300 * 1000,
   });
 
+  console.log("검색결과 data : ", data);
+
   return (
     <>
       {data?.map((post) => {
-        return <Post key={post.postId} post={post} />
+        return <Post key={post.postId} post={post} />;
       })}
-      ;
     </>
   );
 }

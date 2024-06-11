@@ -24,11 +24,15 @@ const UserPosts = ({ username }: Props) => {
 
   if (user) {
     return data?.map((post) => {
-      return <Post key={post.postId} post={post} />;
+      return (
+        <>
+          <Post key={post.postId} post={post} />
+        </>
+      );
     });
-  } else {
-    return null;
   }
+
+  return null;
 };
 
 export default UserPosts;
