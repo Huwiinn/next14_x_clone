@@ -91,6 +91,8 @@ export default function PostRecommends() {
     return <h1>에러가 발생했습니다. 처리해야합니다.</h1>;
   }
 
+  console.log("data : ", data.pages);
+
   return (
     <>
       {data?.pages.map((page, idx) => (
