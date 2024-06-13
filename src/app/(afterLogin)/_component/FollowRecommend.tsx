@@ -17,7 +17,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
   const followed = !!recommendFollow?.Followers.find(
-    (v) => v.userId === session?.user?.email
+    (v) => v.id === session?.user?.email
   );
   const router = useRouter();
 
@@ -46,7 +46,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
         const shallow = [...value];
         shallow[index] = {
           ...shallow[index],
-          Followers: [{ userId: session?.user?.email as string }],
+          Followers: [{ id: session?.user?.email as string }],
           _count: {
             ...shallow[index]._count,
             Followers: shallow[index]._count?.Followers + 1,
@@ -63,7 +63,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
       if (singlePageUserValue) {
         const shallow = {
           ...singlePageUserValue,
-          Followers: [{ userId: session?.user?.email as string }],
+          Followers: [{ id: session?.user?.email as string }],
           _count: {
             ...singlePageUserValue._count,
             Followers: singlePageUserValue._count?.Followers + 1,
@@ -85,7 +85,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
         shallow[index] = {
           ...shallow[index],
           Followers: shallow[index].Followers.filter(
-            (v) => v.userId !== session?.user?.email
+            (v) => v.id !== session?.user?.email
           ),
           _count: {
             ...shallow[index]._count,
@@ -103,7 +103,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
             ...singlePageUserValue,
             // 내 이메일을 제외한 새로운 배열로 업데이트.
             Followers: singlePageUserValue.Followers.filter(
-              (v) => v.userId !== session?.user?.email
+              (v) => v.id !== session?.user?.email
             ),
             _count: {
               ...singlePageUserValue._count,
@@ -140,7 +140,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
         shallow[index] = {
           ...shallow[index],
           Followers: shallow[index].Followers.filter(
-            (v) => v.userId !== session?.user?.email
+            (v) => v.id !== session?.user?.email
           ),
           _count: {
             ...shallow[index]._count,
@@ -158,7 +158,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
             ...singlePageUserValue,
             // 내 이메일을 제외한 새로운 배열로 업데이트.
             Followers: singlePageUserValue.Followers.filter(
-              (v) => v.userId !== session?.user?.email
+              (v) => v.id !== session?.user?.email
             ),
             _count: {
               ...singlePageUserValue._count,
@@ -184,7 +184,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
         const shallow = [...value];
         shallow[index] = {
           ...shallow[index],
-          Followers: [{ userId: session?.user?.email as string }],
+          Followers: [{ id: session?.user?.email as string }],
           _count: {
             ...shallow[index]._count,
             Followers: shallow[index]._count?.Followers + 1,
@@ -201,7 +201,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
       if (singlePageUserValue) {
         const shallow = {
           ...singlePageUserValue,
-          Followers: [{ userId: session?.user?.email as string }],
+          Followers: [{ id: session?.user?.email as string }],
           _count: {
             ...singlePageUserValue._count,
             Followers: singlePageUserValue._count?.Followers + 1,
@@ -217,6 +217,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
   const onFollowHandler: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     e.preventDefault();
+
     if (followed) {
       onUnFollow.mutate();
     } else {

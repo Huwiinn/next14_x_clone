@@ -1,64 +1,55 @@
 "use client";
 
-import React from "react";
 import style from "@/app/(afterLogin)/[username]/profile.module.css";
-import BackButton from "../../_component/BackButton";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import getUser from "@/app/(afterLogin)/[username]/_lib/getUser";
+import BackButton from "@/app/(afterLogin)/_component/BackButton";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { User } from "@/model/User";
+import getUser from "@/app/(afterLogin)/[username]/_lib/getUser";
 import cx from "classnames";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { MouseEventHandler } from "react";
+import { Session } from "@auth/core/types";
 
 type Props = {
   username: string;
+  session: Session | null;
 };
-
-const UserInfo = ({ username }: Props) => {
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useQuery<User, Object, User, [string, string]>({
+export default function UserInfo({ username, session }: Props) {
+  const { data: user, error } = useQuery<
+    User,
+    Object,
+    User,
+    [_1: string, _2: string]
+  >({
     queryKey: ["users", username],
     queryFn: getUser,
-    staleTime: 60 * 1000,
+    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
     gcTime: 300 * 1000,
   });
-  const { data: session } = useSession();
-  const followed = user?.Followers?.find(
-    (v) => v.userId === session?.user?.email
-  );
-  const router = useRouter();
-
   const queryClient = useQueryClient();
-
-  const onFollow = useMutation({
-    mutationFn: () => {
+  const follow = useMutation({
+    mutationFn: (userId: string) => {
+      console.log("follow", userId);
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${user?.id}/follow`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}/follow`,
         {
-          method: "POST",
           credentials: "include",
+          method: "post",
         }
       );
     },
-    onMutate() {
-      if (session?.user?.email === null) {
-        router.replace("/login");
-      }
-
+    onMutate(userId: string) {
       const value: User[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
       if (value) {
-        const index = value.findIndex((v) => v.id === user?.id);
+        const index = value.findIndex((v) => v.id === userId);
         if (index > -1) {
+          console.log(value, userId, index);
           const shallow = [...value];
           shallow[index] = {
             ...shallow[index],
-            Followers: [{ userId: session?.user?.email as string }],
+            Followers: [{ id: session?.user?.email as string }],
             _count: {
               ...shallow[index]._count,
               Followers: shallow[index]._count?.Followers + 1,
@@ -67,40 +58,37 @@ const UserInfo = ({ username }: Props) => {
           queryClient.setQueryData(["users", "followRecommends"], shallow);
         }
       }
-      // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
-      const singlePageUserValue: User | undefined = queryClient.getQueryData([
+      const value2: User | undefined = queryClient.getQueryData([
         "users",
-        user?.id,
+        userId,
       ]);
-
-      if (singlePageUserValue) {
-        const shallow = {
-          ...singlePageUserValue,
-          Followers: [{ userId: session?.user?.email as string }],
+      if (value2) {
+        const shallow: User = {
+          ...value2,
+          Followers: [{ id: session?.user?.email as string }],
           _count: {
-            ...singlePageUserValue._count,
-            Followers: singlePageUserValue._count?.Followers + 1,
+            ...value2._count,
+            Followers: value2._count?.Followers + 1,
           },
         };
-
-        queryClient.setQueryData(["users", user?.id], shallow);
+        queryClient.setQueryData(["users", userId], shallow);
       }
     },
-    onError(err) {
-      console.error("Error : ", err);
+    onError(error, userId: string) {
+      console.error(error);
       const value: User[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
-
       if (value) {
-        const index = value.findIndex((v) => v.id === user?.id);
+        const index = value.findIndex((v) => v.id === userId);
+        console.log(value, userId, index);
         if (index > -1) {
           const shallow = [...value];
           shallow[index] = {
             ...shallow[index],
             Followers: shallow[index].Followers.filter(
-              (v) => v.userId !== session?.user?.email
+              (v) => v.id !== session?.user?.email
             ),
             _count: {
               ...shallow[index]._count,
@@ -109,55 +97,51 @@ const UserInfo = ({ username }: Props) => {
           };
           queryClient.setQueryData(["users", "followRecommends"], shallow);
         }
-        // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
-        const singlePageUserValue: User | undefined = queryClient.getQueryData([
+        const value2: User | undefined = queryClient.getQueryData([
           "users",
-          user?.id,
+          userId,
         ]);
-        if (singlePageUserValue) {
+        if (value2) {
           const shallow = {
-            ...singlePageUserValue,
-            // 내 이메일을 제외한 새로운 배열로 업데이트.
-            Followers: singlePageUserValue.Followers.filter(
-              (v) => v.userId !== session?.user?.email
+            ...value2,
+            Followers: value2.Followers.filter(
+              (v) => v.id !== session?.user?.email
             ),
             _count: {
-              ...singlePageUserValue._count,
-              Followers: singlePageUserValue._count?.Followers - 1,
+              ...value2._count,
+              Followers: value2._count?.Followers - 1,
             },
           };
-          queryClient.setQueryData(["users", user?.id], shallow);
+          queryClient.setQueryData(["users", userId], shallow);
         }
       }
     },
-    onSettled() {},
   });
-
-  const onUnFollow = useMutation({
-    mutationFn: () => {
+  const unfollow = useMutation({
+    mutationFn: (userId: string) => {
+      console.log("unfollow", userId);
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${user?.id}/follow`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${userId}/follow`,
         {
-          method: "POST",
           credentials: "include",
+          method: "delete",
         }
       );
     },
-
-    onMutate() {
+    onMutate(userId: string) {
       const value: User[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
-
       if (value) {
-        const index = value.findIndex((v) => v.id === user?.id);
+        const index = value.findIndex((v) => v.id === userId);
+        console.log(value, userId, index);
         if (index > -1) {
           const shallow = [...value];
           shallow[index] = {
             ...shallow[index],
             Followers: shallow[index].Followers.filter(
-              (v) => v.userId !== session?.user?.email
+              (v) => v.id !== session?.user?.email
             ),
             _count: {
               ...shallow[index]._count,
@@ -166,44 +150,39 @@ const UserInfo = ({ username }: Props) => {
           };
           queryClient.setQueryData(["users", "followRecommends"], shallow);
         }
-        // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
-        const singlePageUserValue: User | undefined = queryClient.getQueryData([
+        const value2: User | undefined = queryClient.getQueryData([
           "users",
-          user?.id,
+          userId,
         ]);
-        if (singlePageUserValue) {
+        if (value2) {
           const shallow = {
-            ...singlePageUserValue,
-            // 내 이메일을 제외한 새로운 배열로 업데이트.
-            Followers: singlePageUserValue.Followers.filter(
-              (v) => v.userId !== session?.user?.email
+            ...value2,
+            Followers: value2.Followers.filter(
+              (v) => v.id !== session?.user?.email
             ),
             _count: {
-              ...singlePageUserValue._count,
-              Followers: singlePageUserValue._count?.Followers - 1,
+              ...value2._count,
+              Followers: value2._count?.Followers - 1,
             },
           };
-          queryClient.setQueryData(["users", user?.id], shallow);
+          queryClient.setQueryData(["users", userId], shallow);
         }
       }
     },
-    onError(err) {
-      console.error("Error : ", err);
-      if (session?.user?.email === null) {
-        router.replace("/login");
-      }
-
+    onError(error, userId: string) {
+      console.error(error);
       const value: User[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
       if (value) {
-        const index = value.findIndex((v) => v.id === user?.id);
+        const index = value.findIndex((v) => v.id === userId);
+        console.log(value, userId, index);
         if (index > -1) {
           const shallow = [...value];
           shallow[index] = {
             ...shallow[index],
-            Followers: [{ userId: session?.user?.email as string }],
+            Followers: [{ id: session?.user?.email as string }],
             _count: {
               ...shallow[index]._count,
               Followers: shallow[index]._count?.Followers + 1,
@@ -212,36 +191,26 @@ const UserInfo = ({ username }: Props) => {
           queryClient.setQueryData(["users", "followRecommends"], shallow);
         }
       }
-      // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
-      const singlePageUserValue: User | undefined = queryClient.getQueryData([
+      const value2: User | undefined = queryClient.getQueryData([
         "users",
-        user?.id,
+        userId,
       ]);
-
-      if (singlePageUserValue) {
+      if (value2) {
         const shallow = {
-          ...singlePageUserValue,
+          ...value2,
           Followers: [{ userId: session?.user?.email as string }],
           _count: {
-            ...singlePageUserValue._count,
-            Followers: singlePageUserValue._count?.Followers + 1,
+            ...value2._count,
+            Followers: value2._count?.Followers + 1,
           },
         };
-
-        queryClient.setQueryData(["users", user?.id], shallow);
+        queryClient.setQueryData(["users", userId], shallow);
       }
     },
-    onSettled() {},
   });
 
-  const onFollowHandler = () => {
-    if (followed) {
-      onUnFollow.mutate();
-    } else {
-      onFollow.mutate();
-    }
-  };
-
+  console.log("error");
+  console.dir(error);
   if (error) {
     return (
       <>
@@ -264,51 +233,58 @@ const UserInfo = ({ username }: Props) => {
             justifyContent: "center",
             display: "flex",
           }}>
-          계정이 존재하지 않습니다.
+          계정이 존재하지 않음
         </div>
       </>
     );
   }
-
-  // if (isLoading) {
-  //   return <p>로딩중입니다.........</p>;
-  // }
-
   if (!user) {
     return null;
   }
+
+  const followed = user.Followers?.find((v) => v.id === session?.user?.email);
+  console.log(session?.user?.email, followed);
+
+  const onFollow: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    console.log("follow", followed, user.id);
+    if (followed) {
+      unfollow.mutate(user.id);
+    } else {
+      follow.mutate(user.id);
+    }
+  };
 
   return (
     <>
       <div className={style.header}>
         <BackButton />
-        <h3 className={style.headerTitle}>{user?.nickname}</h3>
+        <h3 className={style.headerTitle}>{user.nickname}</h3>
       </div>
       <div className={style.userZone}>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div className={style.userRow}>
           <div className={style.userImage}>
-            <img src={user?.image} alt={user?.id} />
+            <img src={user.image} alt={user.id} />
           </div>
           <div className={style.userName}>
-            <div>{user?.nickname}</div>
-            <div>@{user?.id}</div>
+            <div>{user.nickname}</div>
+            <div>@{user.id}</div>
           </div>
-
           {user.id !== session?.user?.email && (
             <button
-              className={cx(style.followButton, followed && style.followed)}
-              onClick={onFollowHandler}>
+              onClick={onFollow}
+              className={cx(style.followButton, followed && style.followed)}>
               {followed ? "팔로잉" : "팔로우"}
             </button>
           )}
         </div>
-        <div style={{ display: "flex", gap: "8px", marginTop: "20px" }}>
+        <div className={style.userFollower}>
           <div>{user._count.Followers} 팔로워</div>
+          &nbsp;
           <div>{user._count.Followings} 팔로우 중</div>
         </div>
       </div>
     </>
   );
-};
-
-export default UserInfo;
+}

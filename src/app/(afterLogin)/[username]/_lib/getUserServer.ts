@@ -2,7 +2,9 @@ import { QueryFunction } from "@tanstack/react-query";
 import { User } from "@/model/User";
 import { cookies } from "next/headers";
 
-const getUser: QueryFunction<User, [string, string]> = async ({ queryKey }) => {
+const getUserServer: QueryFunction<User, [string, string]> = async ({
+  queryKey,
+}) => {
   const [_1, username] = queryKey;
 
   const res = await fetch(`http://localhost:9090/api/users/${username}`, {
@@ -10,6 +12,8 @@ const getUser: QueryFunction<User, [string, string]> = async ({ queryKey }) => {
       tags: ["users", username],
     },
     credentials: "include",
+    // 서버에 쿠키 전달
+    headers: { Cookie: cookies().toString() },
     cache: "no-store",
   });
 
@@ -20,4 +24,4 @@ const getUser: QueryFunction<User, [string, string]> = async ({ queryKey }) => {
   return res.json();
 };
 
-export default getUser;
+export default getUserServer;
