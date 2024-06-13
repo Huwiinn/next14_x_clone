@@ -24,7 +24,8 @@
 
 .userZone {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  /* align-items: center; */
   border-bottom: 1px solid rgb(239, 243, 244);
   padding: 12px 16px;
 }
@@ -34,8 +35,8 @@
   align-items: center;
   margin-right: 12px;
   border-radius: 50%;
-  width : 134px;
-  height : 134px;
+  width: 134px;
+  height: 134px;
   border: 1px solid lightgray;
 }
 .userImage img {
@@ -68,6 +69,16 @@
 }
 .followButton:hover {
   background-color: rgb(39, 44, 48);
+}
+
+.followButton.followed {
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+.followButton.followed:hover {
+  background-color: lightgray;
+  border: 1px solid gray;
 }
 
 .backButton {

@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import style from "./followRecommend.module.css";
 import cx from "classnames";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { User } from "../../../model/User";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { MouseEventHandler } from "react";
 
 type Props = {
   recommendFollow: User;
@@ -19,14 +21,6 @@ export default function FollowRecommend({ recommendFollow }: Props) {
   );
   const router = useRouter();
 
-  // const onFollow = () => {
-  //   if (session.data === null) {
-  //     router.replace("/");
-  //   } else {
-  //     alert("팔로우 완료!");
-  //   }
-  // };
-
   const onFollow = useMutation({
     mutationFn: () => {
       return fetch(
@@ -38,6 +32,10 @@ export default function FollowRecommend({ recommendFollow }: Props) {
       );
     },
     onMutate() {
+      if (session === null) {
+        router.replace("/");
+      }
+
       const value: User[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
@@ -56,29 +54,31 @@ export default function FollowRecommend({ recommendFollow }: Props) {
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
       }
+      // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
+      const singlePageUserValue: User | undefined = queryClient.getQueryData([
+        "users",
+        recommendFollow.id,
+      ]);
+      console.log("singlePageUserValue : ", singlePageUserValue);
+      if (singlePageUserValue) {
+        const shallow = {
+          ...singlePageUserValue,
+          Followers: [{ userId: session?.user?.email as string }],
+          _count: {
+            ...singlePageUserValue._count,
+            Followers: singlePageUserValue._count?.Followers + 1,
+          },
+        };
+        console.log("shallow : ", shallow);
+        queryClient.setQueryData(["users", recommendFollow.id], shallow);
+      }
     },
-    onError(err) {
-      console.log("팔로우 에러 : ", err);
-      console.error("팔로우 에러 : ", err);
-    },
-    onSettled() {},
-  });
-
-  const onUnFollow = useMutation({
-    mutationFn: () => {
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${recommendFollow.id}/follow`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
-    },
-    onMutate() {
+    onError() {
       const value: User[] | undefined = queryClient.getQueryData([
         "users",
         "followRecommends",
       ]);
+
       if (value) {
         const index = value.findIndex((v) => v.id === recommendFollow.id);
         const shallow = [...value];
@@ -93,17 +93,130 @@ export default function FollowRecommend({ recommendFollow }: Props) {
           },
         };
         queryClient.setQueryData(["users", "followRecommends"], shallow);
+        // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
+        const singlePageUserValue: User | undefined = queryClient.getQueryData([
+          "users",
+          recommendFollow.id,
+        ]);
+        if (singlePageUserValue) {
+          const shallow = {
+            ...singlePageUserValue,
+            // 내 이메일을 제외한 새로운 배열로 업데이트.
+            Followers: singlePageUserValue.Followers.filter(
+              (v) => v.userId !== session?.user?.email
+            ),
+            _count: {
+              ...singlePageUserValue._count,
+              Followers: singlePageUserValue._count?.Followers - 1,
+            },
+          };
+          queryClient.setQueryData(["users", recommendFollow.id], shallow);
+        }
       }
-    },
-    onError(err) {
-      console.log("팔로우 에러 : ", err);
-      console.error("팔로우 에러 : ", err);
     },
     onSettled() {},
   });
 
-  const onFollowHandler = () => {
-    console.log("팔로우 클릭!!");
+  const onUnFollow = useMutation({
+    mutationFn: () => {
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${recommendFollow.id}/follow`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+    },
+
+    onMutate() {
+      const value: User[] | undefined = queryClient.getQueryData([
+        "users",
+        "followRecommends",
+      ]);
+
+      if (value) {
+        const index = value.findIndex((v) => v.id === recommendFollow.id);
+        const shallow = [...value];
+        shallow[index] = {
+          ...shallow[index],
+          Followers: shallow[index].Followers.filter(
+            (v) => v.userId !== session?.user?.email
+          ),
+          _count: {
+            ...shallow[index]._count,
+            Followers: shallow[index]._count?.Followers - 1,
+          },
+        };
+        queryClient.setQueryData(["users", "followRecommends"], shallow);
+        // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
+        const singlePageUserValue: User | undefined = queryClient.getQueryData([
+          "users",
+          recommendFollow.id,
+        ]);
+        if (singlePageUserValue) {
+          const shallow = {
+            ...singlePageUserValue,
+            // 내 이메일을 제외한 새로운 배열로 업데이트.
+            Followers: singlePageUserValue.Followers.filter(
+              (v) => v.userId !== session?.user?.email
+            ),
+            _count: {
+              ...singlePageUserValue._count,
+              Followers: singlePageUserValue._count?.Followers - 1,
+            },
+          };
+          queryClient.setQueryData(["users", recommendFollow.id], shallow);
+        }
+      }
+    },
+    onError() {
+      if (session === null) {
+        router.replace("/");
+      }
+
+      const value: User[] | undefined = queryClient.getQueryData([
+        "users",
+        "followRecommends",
+      ]);
+      if (value) {
+        const index = value.findIndex((v) => v.id === recommendFollow.id);
+        console.log(value, recommendFollow.id, index);
+        const shallow = [...value];
+        shallow[index] = {
+          ...shallow[index],
+          Followers: [{ userId: session?.user?.email as string }],
+          _count: {
+            ...shallow[index]._count,
+            Followers: shallow[index]._count?.Followers + 1,
+          },
+        };
+        queryClient.setQueryData(["users", "followRecommends"], shallow);
+      }
+      // ---- 유저 개인페이지와 팔로우 상태를 동일하게 맞춰주는 구간
+      const singlePageUserValue: User | undefined = queryClient.getQueryData([
+        "users",
+        recommendFollow.id,
+      ]);
+      console.log("singlePageUserValue : ", singlePageUserValue);
+      if (singlePageUserValue) {
+        const shallow = {
+          ...singlePageUserValue,
+          Followers: [{ userId: session?.user?.email as string }],
+          _count: {
+            ...singlePageUserValue._count,
+            Followers: singlePageUserValue._count?.Followers + 1,
+          },
+        };
+        console.log("shallow : ", shallow);
+        queryClient.setQueryData(["users", recommendFollow.id], shallow);
+      }
+    },
+    onSettled() {},
+  });
+
+  const onFollowHandler: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     if (followed) {
       onUnFollow.mutate();
     } else {
@@ -112,7 +225,7 @@ export default function FollowRecommend({ recommendFollow }: Props) {
   };
 
   return (
-    <div className={style.container}>
+    <Link href={`/${recommendFollow.id}`} className={style.container}>
       <div className={style.userLogoSection}>
         <div className={style.userLogo}>
           <img src={recommendFollow.image} alt={recommendFollow.id} />
@@ -128,6 +241,6 @@ export default function FollowRecommend({ recommendFollow }: Props) {
           {followed ? "팔로잉" : "팔로우"}
         </button>
       </div>
-    </div>
+    </Link>
   );
 }

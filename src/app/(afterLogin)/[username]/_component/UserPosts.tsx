@@ -24,11 +24,7 @@ const UserPosts = ({ username }: Props) => {
 
   if (user) {
     return data?.map((post) => {
-      return (
-        <>
-          <Post key={post.postId} post={post} />
-        </>
-      );
+      <Post key={post.postId} post={post} />;
     });
   }
 
