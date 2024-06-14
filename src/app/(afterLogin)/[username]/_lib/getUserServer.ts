@@ -1,27 +1,29 @@
-import { QueryFunction } from "@tanstack/react-query";
-import { User } from "@/model/User";
 import { cookies } from "next/headers";
 
-const getUserServer: QueryFunction<User, [string, string]> = async ({
+export const getUserServer = async ({
   queryKey,
+}: {
+  queryKey: [string, string];
 }) => {
   const [_1, username] = queryKey;
-
-  const res = await fetch(`http://localhost:9090/api/users/${username}`, {
-    next: {
-      tags: ["users", username],
-    },
-    credentials: "include",
-    // 서버에 쿠키 전달
-    headers: { Cookie: cookies().toString() },
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${username}`,
+    {
+      next: {
+        tags: ["users", username],
+      },
+      credentials: "include",
+      headers: { Cookie: cookies().toString() },
+      cache: "no-store",
+    }
+  );
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
-    throw new Error("해당 유저 정보를 불러오지 못 했습니다.");
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
   }
 
   return res.json();
 };
-
-export default getUserServer;

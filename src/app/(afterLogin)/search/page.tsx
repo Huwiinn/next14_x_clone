@@ -3,9 +3,19 @@ import SearchForm from "@/app/(afterLogin)/_component/SearchForm";
 import BackButton from "../_component/BackButton";
 import Tab from "./_component/Tab";
 import SearchResult from "./_component/SearchResult";
+import { Metadata } from "next/types";
 
 type Props = {
   searchParams: { q: string; f?: string; pf?: string };
+};
+
+export const generateMetadata = async ({
+  searchParams,
+}: Props): Promise<Metadata> => {
+  return {
+    title: `${searchParams.q} - 검색 X`,
+    description: `${searchParams.q} - 검색 X`,
+  };
 };
 
 export default function Search({ searchParams }: Props) {

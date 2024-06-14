@@ -1,4 +1,6 @@
-export const getSinglePost = async ({
+import { cookies } from "next/headers";
+
+export const getSinglePostServer = async ({
   queryKey,
 }: {
   queryKey: [string, string];
@@ -9,6 +11,9 @@ export const getSinglePost = async ({
       tags: ["posts", id],
     },
     credentials: "include",
+    headers: {
+      Cookie: cookies().toString(),
+    },
     // cache: "no-store", 해당 속성을 없애면 처음에 불러왔던 이미지를 계속해서 사용함. 활성화되면 매번 새로운 데이터를 불러와서 적용함. revalidate할 때 까지.
   });
 
@@ -21,4 +26,4 @@ export const getSinglePost = async ({
   return res.json();
 };
 
-export default getSinglePost;
+export default getSinglePostServer;

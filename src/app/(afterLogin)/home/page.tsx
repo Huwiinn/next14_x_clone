@@ -6,6 +6,12 @@ import TabProvider from "./_component/TabProvider";
 import TabDeciderSuspense from "./_component/TabDeciderSuspense";
 import Loading from "./loading";
 import { auth } from "@/auth";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Clone X / Home",
+  description: "Home",
+};
 
 const Home = async () => {
   const session = await auth();
