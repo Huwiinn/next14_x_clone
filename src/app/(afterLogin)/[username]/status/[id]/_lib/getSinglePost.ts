@@ -9,7 +9,7 @@ export const getSinglePost = async ({
       tags: ["posts", id],
     },
     credentials: "include",
-    // cache: "no-store", 해당 속성을 없애면 처음에 불러왔던 이미지를 계속해서 사용함. 활성화되면 매번 새로운 데이터를 불러와서 적용함. revalidate할 때 까지.
+    cache: "no-store", //  해당 속성을 없애면 처음에 불러왔던 이미지를 계속해서 사용함. 활성화되면 매번 새로운 데이터를 불러와서 적용함. revalidate할 때 까지.
   });
 
   if (!res.ok) {

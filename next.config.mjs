@@ -1,6 +1,6 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // output : 'export', 해당 속성이 있으면 StaticMode, 없으면 Dynamic Mode
   async rewrites() {
     return [
       {

@@ -1,4 +1,4 @@
-import styles from "@/app/(afterLogin)/home/home.module.css";
+import style from "./home.module.css";
 import React, { Suspense } from "react";
 import Tab from "./_component/Tab";
 import PostForm from "./_component/PostForm";
@@ -13,21 +13,17 @@ export const metadata: Metadata = {
   description: "Home",
 };
 
-const Home = async () => {
+export default async function Home() {
   const session = await auth();
-
   return (
-    <main className={styles.main}>
+    <main className={style.main}>
       <TabProvider>
         <Tab />
         <PostForm me={session} />
         <Suspense fallback={<Loading />}>
-          {/* @ts-expect-error Async Server Component */}
           <TabDeciderSuspense />
         </Suspense>
       </TabProvider>
     </main>
   );
-};
-
-export default Home;
+}

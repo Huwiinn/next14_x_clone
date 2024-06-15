@@ -9,7 +9,7 @@ type Props = {
   username: string;
 };
 
-const UserPosts = ({ username }: Props) => {
+const UserPosts = ({ username }: Props): any => {
   const { data, error } = useQuery<
     IPost[],
     Object,
@@ -24,7 +24,9 @@ const UserPosts = ({ username }: Props) => {
 
   if (user) {
     return data?.map((post) => {
-      <Post key={post.postId} post={post} />;
+      <>
+        <Post key={post.postId} post={post} />
+      </>;
     });
   }
 
