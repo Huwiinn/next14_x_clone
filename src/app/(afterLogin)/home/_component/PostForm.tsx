@@ -11,7 +11,7 @@ import style from "./postForm.module.css";
 import { useSession } from "next-auth/react";
 import { Session } from "@auth/core/types";
 import { onTextAreaResizeHeight } from "../../_lib/onTextAreaResizeHeight";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Post as IPost } from "@/model/Post";
 
 type Props = {
@@ -25,11 +25,13 @@ export default function PostForm({ me }: Props) {
   >([]);
   const imageRef = useRef<HTMLInputElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (e: FormEvent) => {
       e.preventDefault();
+      e.stopPropagation();
+
       const formData = new FormData();
       formData.append("content", content);
       previewImgs.forEach((imgFile) => {
@@ -43,9 +45,10 @@ export default function PostForm({ me }: Props) {
       });
     },
     async onSuccess(response, variable) {
+      const newPost = await response.json();
+
       setContent("");
       setPreviewImgs([]);
-      const newPost = await response.json();
 
       if (queryClient.getQueryData(["posts", "recommends"])) {
         queryClient.setQueryData(

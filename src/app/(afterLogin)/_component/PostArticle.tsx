@@ -19,8 +19,6 @@ type Props = {
   };
 };
 
-export const a = 1;
-
 export default function PostArticle({ children, post }: Props) {
   const router = useRouter();
   const onClick = () => {

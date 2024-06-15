@@ -14,4 +14,6 @@ export interface Post {
   Reposts: UserID[];
   Comments: UserID[];
   _count: { Comments: number; Hearts: number; Reposts: number };
+  Parent?: Post; // 답글
+  Original?: Post; // 재게시글
 }
