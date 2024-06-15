@@ -17,13 +17,18 @@ type Props = { noImage?: boolean; post: Post };
 
 export default function Post({ noImage, post }: Props) {
   let target = post;
+
   if (post.Original) {
     target = post.Original;
+  } else if (post.Parent) {
+    target = post.Parent;
+  } else {
+    target = post;
   }
 
-  if (post.Parent) {
-    target = post.Parent;
-  }
+  // if (post.Parent) {
+  //   target = post.Parent;
+  // }
 
   const stopPropagation: MouseEventHandler = (e) => {
     e.stopPropagation();
@@ -89,6 +94,9 @@ export default function Post({ noImage, post }: Props) {
           <ActionButtons white post={post} />
         </div>
       </div>
+
+      <div>모든 컨텐츠 : {post.content}</div>
+      <div>모든 컨텐츠 (target) : {target.content}</div>
     </PostArticle>
   );
 }

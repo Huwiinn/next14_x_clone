@@ -10,17 +10,21 @@ import {
 import { Post } from "@/model/Post";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useModalStore } from "../../../store/modal";
 
 type Props = { white?: boolean; post: Post };
 
 export default function ActionButtons({ white, post }: Props) {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
+  const modalStore = useModalStore();
+
   const router = useRouter();
   // 내가 코멘트 작성을 했는지 판단
-  const commented = !!post.Comments?.find(
-    (v) => v.userId === session?.user?.email
-  );
+  // const commented = !!post.Comments?.find(
+  //   (v) => v.userId === session?.user?.email
+  // );
+
   // 내가 리포스팅 했는지 판단
   const reposted = !!post.Reposts?.find(
     (v) => v.userId === session?.user?.email
@@ -185,6 +189,9 @@ export default function ActionButtons({ white, post }: Props) {
 
   const onClickComment: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
+
+    modalStore.setMode("comment");
+    modalStore.setData(post);
 
     router.push(`/compose/tweet`);
 
@@ -460,8 +467,8 @@ export default function ActionButtons({ white, post }: Props) {
     <div className={style.actionButtons}>
       <div
         className={cx(
-          style.commentButton,
-          { [style.commented]: commented }
+          style.commentButton
+          // { [style.commented]: commented }
           // white && style.white
         )}>
         <button title="댓글 아이콘 버튼" onClick={onClickComment}>
