@@ -85,3 +85,47 @@ export default nextConfig;
 => export const dynamic = 'force-dynamic'를 적용한 page.tsx는 써드파티 라이브러리의 백엔드 요청 캐싱을 무시한다.
 
 또한, 모든 요청을 캐싱하지 않기 때문에 react query나 fetch 함수의 요청도 모두 캐싱을 하지 않는다.
+
+<hr>
+
+240616
+
+### 링크 공유 시, Metadata(og tag) 적용 - generateMetadata 함수 내에서 openGraph 속성을 이용하여 og 태그 추가
+
+```typescript
+export async function generateMetadata({ params }: Props) {
+  const user: User = await getUserServer({
+    queryKey: ["users", params.username],
+  });
+  const post: Post = await getSinglePostServer({
+    queryKey: ["posts", params.id],
+  });
+
+  return {
+    title: `${user.nickname} | ${user.id} X`,
+    description: `${user.nickname} | ${user.id} 프로필`,
+    openGraph: {
+      title: `${user.nickname} | ${user.id} X`,
+      description: `${user.nickname} | ${user.id} 프로필`,
+      images:
+        post.Images.length > 0
+          ? post.Images?.map((v) => ({
+              url: `${process.env.NEXT_PUBLIC_BASE_URL}${v.link}`, // 게시글에 이미지가 있을 때,
+              width: 400,
+              height: 400,
+            }))
+          : [
+              {
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`, // /upload [게시글에 이미지가 없을 때, 유저 이미지 첨부]
+                width: 400,
+                height: 400,
+              },
+            ],
+    },
+  };
+}
+```
+
+### 적용 결과
+
+<img src="./img/og_tag_insert.png">
