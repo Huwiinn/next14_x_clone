@@ -27,9 +27,28 @@ export async function generateMetadata({ params }: Props) {
   const post: Post = await getSinglePostServer({
     queryKey: ["posts", params.id],
   });
+
   return {
-    title: `${user.nickname}﹒${user.id} / X 프로필`,
-    description: `${user.nickname}﹒${user.id} / X 프로필`,
+    title: `${user.nickname} | ${user.id} X`,
+    description: `${user.nickname} | ${user.id} 프로필`,
+    openGraph: {
+      title: `${user.nickname} | ${user.id} X`,
+      description: `${user.nickname} | ${user.id} 프로필`,
+      images:
+        post.Images.length > 0
+          ? post.Images?.map((v) => ({
+              url: `${process.env.NEXT_PUBLIC_BASE_URL}${v.link}`, // 게시글에 이미지가 있을 때,
+              width: 400,
+              height: 400,
+            }))
+          : [
+              {
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`, // /upload [게시글에 이미지가 없을 때, 유저 이미지 첨부]
+                width: 400,
+                height: 400,
+              },
+            ],
+    },
   };
 }
 

@@ -16,16 +16,28 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props) {
-  console.log(1111, params);
-  console.log(2222, params.id);
-  console.log(3333, params.username);
+  // console.log(1111, params);
+  // console.log(2222, params.id);
+  // console.log(3333, params.username);
+
   const user: User = await getUserServer({
     queryKey: ["users", params.username],
   });
 
   return {
-    title: `나의 X 프로필`,
-    description: `나의 X 상세정보`,
+    title: `${user.nickname} | ${user.id} X`,
+    description: `${user.nickname} | ${user.id} 프로필`,
+    openGraph: {
+      title: `${user.nickname} | ${user.id} X`,
+      description: `${user.nickname} | ${user.id} 프로필`,
+      images: [
+        {
+          url: `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`, // /upload
+          width: 400,
+          height: 400,
+        },
+      ],
+    },
   };
 }
 

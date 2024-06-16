@@ -28,7 +28,10 @@ export default function PostRecommends() {
     queryKey: ["posts", "recommends"],
     queryFn: getPostRecommends,
     initialPageParam: 0, // [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]] ...
-    getNextPageParam: (lastPage) => lastPage.at(-1)?.postId,
+    getNextPageParam: (lastPage) => {
+      console.log("lastPage : ", lastPage);
+      return lastPage.at(-1)?.postId;
+    },
     staleTime: 60 * 1000, // fresh => stale, 5분 기준. 현재는 1분으로 수정함.
     // fresh일 동안에는 서버에서 데이터를 가져오지 않는다. stale일 때 가져옴.
     gcTime: 300 * 1000,
@@ -40,7 +43,7 @@ export default function PostRecommends() {
     // ✅ gcTime은 staleTime보다 무조건 커야한다.
   });
 
-  // console.log("data : ", data);
+  console.log("data : ", data);
   // console.log("22222", isFetching, isPending, isLoading, isError);
 
   const { ref, inView } = useInView({
@@ -49,6 +52,7 @@ export default function PostRecommends() {
   });
 
   useEffect(() => {
+    console.log("inView : ", inView);
     // 화면에 보일 때 실행
     if (inView) {
       !isFetching && hasNextPage && fetchNextPage();
