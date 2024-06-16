@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import styles from "./postForm.module.css";
+import style from "./postForm.module.css";
 import { useSession } from "next-auth/react";
 import { Session } from "@auth/core/types";
 import { onTextAreaResizeHeight } from "../../_lib/onTextAreaResizeHeight";
@@ -181,13 +181,13 @@ export default function PostForm({ me }: Props) {
   };
 
   return (
-    <form className={styles.postForm} onSubmit={mutation.mutate}>
-      <div className={styles.postUserSection}>
-        <div className={styles.postUserImage}>
+    <form className={style.postForm} onSubmit={mutation.mutate}>
+      <div className={style.postUserSection}>
+        <div className={style.postUserImage}>
           <img src={me?.user?.image as string} alt={me?.user?.id as string} />
         </div>
       </div>
-      <div className={styles.postInputSection}>
+      <div className={style.postInputSection}>
         <textarea
           value={content}
           onChange={(e) => {
@@ -198,14 +198,14 @@ export default function PostForm({ me }: Props) {
           ref={textAreaRef}
         />
 
-        <div className={styles.previewWrap}>
+        <div className={style.previewWrap}>
           {previewImgs.map((image, idx) => {
             return (
               image && (
                 <div
                   key={idx}
                   onClick={() => onRemoveImage(idx)}
-                  className={styles.previewImg}>
+                  className={style.previewImg}>
                   <img key={idx} src={image.dataUrl} alt="이미지 미리보기" />
                 </div>
               )
@@ -213,9 +213,9 @@ export default function PostForm({ me }: Props) {
           })}
         </div>
 
-        <div className={styles.postButtonSection}>
-          <div className={styles.footerButtons}>
-            <div className={styles.footerButtonLeft}>
+        <div className={style.postButtonSection}>
+          <div className={style.footerButtons}>
+            <div className={style.footerButtonLeft}>
               <input
                 type="file"
                 name="imageFiles"
@@ -226,7 +226,7 @@ export default function PostForm({ me }: Props) {
               />
               <button
                 title="이미지 추가 버튼"
-                className={styles.uploadButton}
+                className={style.uploadButton}
                 type="button"
                 onClick={onClickButton}>
                 <svg width={24} viewBox="0 0 24 24" aria-hidden="true">
@@ -236,7 +236,7 @@ export default function PostForm({ me }: Props) {
                 </svg>
               </button>
             </div>
-            <button className={styles.actionButton} disabled={!content}>
+            <button className={style.actionButton} disabled={!content}>
               게시하기
             </button>
           </div>
