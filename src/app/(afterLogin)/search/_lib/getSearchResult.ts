@@ -9,9 +9,9 @@ export const getSearchResult: QueryFunction<
   // const urlSearchParams = new URLSearchParams(searchParams);
 
   const res = await fetch(
-    `http://localhost:9090/api/posts?cursor=0&q=${encodeURIComponent(
-      searchParams.q
-    )}`,
+    `${
+      process.env.NEXT_PUBLIC_BASE_URL
+    }/api/posts?cursor=0&q=${encodeURIComponent(searchParams.q)}`,
 
     {
       next: {

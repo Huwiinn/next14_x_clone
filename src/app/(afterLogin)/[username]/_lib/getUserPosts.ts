@@ -6,12 +6,15 @@ const getUserPosts: QueryFunction<Post[], [string, string, string]> = async ({
 }) => {
   const [_1, _2, username] = queryKey;
 
-  const res = await fetch(`http://localhost:9090/api/users/${username}/posts`, {
-    next: {
-      tags: ["posts", "users", username],
-    },
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${username}/posts`,
+    {
+      next: {
+        tags: ["posts", "users", username],
+      },
+      cache: "no-store",
+    }
+  );
 
   if (!res.ok) {
     throw new Error("해당 유저의 포스팅을 불러오지 못 했습니다.");

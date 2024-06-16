@@ -5,7 +5,7 @@ type Props = {
 // 해당 함수는 서버컴포넌트에서 react-query로 데이터를 가져오는 모습
 export const getFollowingPosts = async ({ pageParam }: Props) => {
   const res = await fetch(
-    `http://localhost:9090/api/posts/followings?cursor=${pageParam}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/followings?cursor=${pageParam}`,
     {
       next: {
         tags: ["posts", "followings"],
