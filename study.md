@@ -69,8 +69,19 @@ export default nextConfig;
   - Next.js 12버전에 있던 SSG(Static Site Generation)와 동일한 개념임.
 
 - ISR이 Next.js에서 사라졌다.
+
   - Data Fetching, Caching, Revalidating으로 구현할 수 있음.
   - 다이나믹 렌더링 방식.
   - Full Route Cache가 ISR 역할을 충분히 해줄 수 있다.
   - ISR에서 기존 컨텐츠가 수정되는 경우를 위한 기능이 있었는데, Revalidating Data로 구현 가능하다.
     - Data Cache를 날려버림
+
+- Next.js는 라이브러리에서 보내는 요청까지 캐싱해버리는데,
+
+**export const dynamic = 'force-dynamic'**
+
+해당 문구를 page.tsx에 넣어주면 해당 페이지에서 보내는 모든 요청을 캐싱하지 않음.
+
+=> export const dynamic = 'force-dynamic'를 적용한 page.tsx는 써드파티 라이브러리의 백엔드 요청 캐싱을 무시한다.
+
+또한, 모든 요청을 캐싱하지 않기 때문에 react query나 fetch 함수의 요청도 모두 캐싱을 하지 않는다.
