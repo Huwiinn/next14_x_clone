@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./trendSection.module.css";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import getTrends from "../_lib/getTrends";
