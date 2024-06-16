@@ -6,13 +6,9 @@ import Image from "next/image";
 import NavMenu from "./_component/NavMenu";
 import LogoutButton from "./_component/LogOutButton";
 import TrendSection from "./_component/TrendSection";
-import FollowRecommend from "./_component/FollowRecommend";
 import SearchBar from "./_component/SearchBar";
 import { auth } from "@/auth";
 import RQProvider from "./_component/RQProvider";
-import { useQuery } from "@tanstack/react-query";
-import { User } from "../../model/User";
-import getFollowRecommends from "./_lib/getFollowRecommends";
 import FollowRecommendsSec from "./_component/FollowRecommendsSec";
 
 type Props = { children: ReactNode; modal: ReactNode };
