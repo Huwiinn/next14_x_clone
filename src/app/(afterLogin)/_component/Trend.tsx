@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import styles from "./trend.module.css";
+import style from "./trend.module.css";
 import { HashTag } from "../../../model/HashTag";
 
 type Props = {
@@ -11,10 +11,10 @@ const Trend = ({ trend }: Props) => {
   return (
     <Link
       href={`./search?q=${encodeURIComponent(trend.title)}`}
-      className={styles.container}>
-      <div className={styles.title}>실시간 트렌드</div>
-      <div className={styles.title}>{trend.title}</div>
-      <div className={styles.count}>{trend.count.toLocaleString()} posts</div>
+      className={style.container}>
+      <div className={style.title}>실시간 트렌드</div>
+      <div className={style.title}>{trend.title}</div>
+      <div className={style.count}>{trend.count.toLocaleString()} posts</div>
     </Link>
   );
 };
